@@ -6,7 +6,7 @@ import Card from '../components/card';
 export default function Home() {
   const eth = useEthereum();
   const acc = useAccount();
-
+  //eth
   return (
     <div className='relative flex flex-col sm:flex-wrap sm:flex-row max-w-full justify-around items-center pb-12 mx-4 z-10 pt-24'>
       {
