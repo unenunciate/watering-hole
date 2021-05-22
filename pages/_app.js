@@ -2,8 +2,10 @@ import '../styles/globals.css';
 
 import Head from 'next/head';
 
-import { UseWalletProvider } from 'use-wallet';
-import { useState } from 'react'; 
+import { useState } from 'react';
+
+import EthereumContext from '../contexts/ethereum';
+import AccountContext from '../contexts/account';
 
 import Header from '../components/header';
 import Footer from '../components/footer';
@@ -13,25 +15,16 @@ const App = ({ Component, pageProps }) => {
   const [overlayVisible, setOverlayVisible] = useState(false);
 
   return (
-      <div>
-        <div className='bg-hero-pattern bg-yellow-100 min-w-full min-h-full z-auto'>
-          <UseWalletProvider 
-                chainId={3}
-                connectors={
-                  { 
-                    fortmatic: { apiKey: 'pk_test_8A9FF02D9D192E0A' },
-                    walletconnect: { rpcUrl: 'https://mainnet.eth.aragon.network/' },
-                    walletlink: { url: 'https://mainnet.eth.aragon.network/' },
-                  }
-                }
-              >
+      <EthereumContext.Provider>
+        <AccountContext.Provider>
+          <div className='bg-hero-pattern bg-yellow-100 min-w-full min-h-full z-auto'>
               <Overlay overlayVisible={overlayVisible} setOverlayVisible={setOverlayVisible} />
               <Header overlayVisible={overlayVisible} setOverlayVisible={setOverlayVisible} />
               <Component {...pageProps} />
               <Footer />
-            </UseWalletProvider>
           </div>
-      </div>
+        </AccountContext.Provider>
+      </EthereumContext.Provider>
   )
 }
 

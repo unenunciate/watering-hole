@@ -4,8 +4,8 @@ const Card = () => {
 
 
     return(
-        <div className='flex min-w-24 max-w-lg z-20' >
-            <div className='flex flex-col '>
+        <div className='flex relative min-w-24 max-w-lg z-20' >
+            <div className='flex flex-col z-20'>
                 <div className='flex flex-row' >
                     <div className='pr-4 px-2' >
                         <Skeleton circle={true} height={24} width={24}  />
