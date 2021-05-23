@@ -1,13 +1,8 @@
 import Link from 'next/link';
 
-import { useEthereum } from '../hooks/use-ethereum';
-import { useAccount } from '../hooks/use-account';
-
 import { DAPP_ADDRESS } from '../constrants/index';
 
 const Overlay = ({ overlayVisible, setOverlayVisible }) => {
-    const eth = useEthereum();
-    const acc = useAccount();
 
     return (
         overlayVisible ?

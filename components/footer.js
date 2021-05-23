@@ -1,11 +1,7 @@
 import Link from 'next/link';
 
-import { useEthereum } from '../hooks/use-ethereum';
-import { useAccount } from '../hooks/use-account';
-
 const Footer = () => {
-    const eth = useEthereum();
-    const acc = useAccount();
+
 
     return (
         <footer className="flex justify-between shadow-inner min-w-full p-6 bg-purple-600 flex-row fixed bottom-0 text-yellow-400 z-40 border-t-2 border-yellow-400">
@@ -27,7 +23,7 @@ const Footer = () => {
             <button className='relative inset-0 transform hover:-rotate-45 transition duration-300' onClick={
                     () => {
                         try {
-                            if ( !eth.isStatus ) {
+                            if ( !false ) {
                                 eth.scanQRCode()
                                     .then(data => {
                                     console.log('QR Scanned:', data, acc)
