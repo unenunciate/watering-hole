@@ -1,1 +1,1 @@
-export const DAPP_ADDRESS = 'wwww.deleta';
+export const DAPP_ADDRESS = 'www.watercooler.blue';

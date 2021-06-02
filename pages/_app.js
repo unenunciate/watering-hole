@@ -2,55 +2,27 @@ import '../styles/globals.css';
 
 import Head from 'next/head';
 
-import { Web3ReactProvider } from '@web3-react/core';
-
-import Web3 from 'web3';
-
 import { useEffect, useState } from 'react';
 
 import Header from '../components/header';
 import Footer from '../components/footer';
 import Overlay from '../components/overlay';
+import Ethereum from '../lib/ethereum';
+import EthereumContext from '../contexts/ethereum';
 
 const App = ({ Component, pageProps }) => {
   const [overlayVisible, setOverlayVisible] = useState(false);
 
-  const getLibrary = 
-    () => {
-      const options = {
-        timeout: 30000,
-        clientConfig: {
-          maxReceivedFrameSize: 100000000,
-          maxReceivedMessageSize: 100000000,
-          keepalive: true,
-          keepaliveInterval: 60000
-        },
-        reconnect: {
-            auto: true,
-            delay: 5000,
-            maxAttempts: 5,
-            onTimeout: false
-        }
-      };
-
-      const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545", options);
-      console.log(web3);
-      return web3;
-  };
-
+ 
   return (
-    <>
-      <main>
-        <Web3ReactProvider getLibrary={getLibrary}>
-              <div className='bg-hero-pattern bg-yellow-100 min-w-full min-h-full z-auto'>
-                  <Overlay overlayVisible={overlayVisible} setOverlayVisible={setOverlayVisible} />
-                  <Header overlayVisible={overlayVisible} setOverlayVisible={setOverlayVisible} />
-                  <Component {...pageProps} />
-                  <Footer />
-              </div>
-        </Web3ReactProvider>
-      </main>
-    </>
+    <EthereumContext.Provider value={Ethereum} >
+          <div className='bg-hero-pattern bg-yellow-100 min-w-full z-auto min-h-screen w-screen max-w-full'>
+              <Overlay overlayVisible={overlayVisible} setOverlayVisible={setOverlayVisible} />
+              <Header overlayVisible={overlayVisible} setOverlayVisible={setOverlayVisible} />
+              <Component {...pageProps} />
+              <Footer />
+          </div>
+    </EthereumContext.Provider>
   )
 }
 

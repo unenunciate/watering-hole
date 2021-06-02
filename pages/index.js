@@ -1,13 +1,16 @@
 import Head from 'next/head';
+import { useContext, useEffect } from 'react';
 
 import Card from '../components/card';
+import EthereumContext from '../contexts/ethereum';
 
 export default function Home( {} ) {
 
-
+  console.log( 'index.js', useContext(EthereumContext) );
+  
   return (
     <>
-      <div className='relative flex flex-col sm:flex-wrap sm:flex-row max-w-full justify-around items-center pb-12 mx-4 z-10 pt-24'>
+      <div className='relative flex flex-col sm:flex-wrap sm:flex-row max-w-full justify-around items-center pb-12 mb-2 mx-4 z-10 pt-24'>
         {
           !false ?
             <>
