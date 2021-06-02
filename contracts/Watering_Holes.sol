@@ -7,7 +7,6 @@ import { Gallons_ERC20 } from "./Gallons_ERC20.sol";
 import "./Ownable.sol";
 
 contract Watering_Holes is Ownable {
-    
     /*
         Data types:
         WateringHole - forum level data structure;
@@ -94,12 +93,12 @@ contract Watering_Holes is Ownable {
 
     address payable _zeroAddress;
     
-    constructor(address Gallons_ERC20_, address Watering_Holes_Bond_) {
+    constructor(address payable Gallons_ERC20_) {
         _bondEpochTimestamp = block.timestamp;
         _bondPeriodTimestamp = _bondEpochTimestamp;
         _bondPeriodDuration = 2629746;
     
-        _zeroAddress = payable(0x0000000000000000000000000000000000000000);
+        _zeroAddress = payable(address(0x0000000000000000000000000000000000000000));
         
         _reservoir = Gallons_ERC20(Gallons_ERC20_);
     }
@@ -132,7 +131,7 @@ contract Watering_Holes is Ownable {
         uint numberOfPosts_ = _wateringHoles[wateringHoleID_]._numberOfPostsInHole++;
         _posts[wateringHoleID_][numberOfPosts_] = Post(
             numberOfPosts_,
-            payable(tx.origin),
+            payable(address(msg.sender)),
             content_,
             date_,
             block.timestamp,
@@ -140,7 +139,7 @@ contract Watering_Holes is Ownable {
             0
         );
         
-        addActiveUser(payable(tx.origin));
+        addActiveUser(payable(address(msg.sender)));
         
         return true;
     }
@@ -153,7 +152,7 @@ contract Watering_Holes is Ownable {
 
         _posts[wateringHoleID_][numberOfComments_] = Post(
             _numberOfComments,
-            payable(tx.origin),
+            payable(address(msg.sender)),
             content_,
             date_,
             block.timestamp,
@@ -161,7 +160,7 @@ contract Watering_Holes is Ownable {
             0
         );
         
-        addActiveUser(payable(tx.origin));
+        addActiveUser(payable(address(msg.sender)));
         
         return true;
     }
@@ -177,13 +176,15 @@ contract Watering_Holes is Ownable {
         _numberOfUsers++;
         _users[msg.sender] = User(
             _numberOfUsers,
-            payable(msg.sender),
+            payable(address(msg.sender)),
             name_,
             profilePhotoURL_,
             0
         );
+
+        _reservoir.transferFrom(payable((address(this))), payable(address(msg.sender)), uint(1000));
         
-        addActiveUser(payable(tx.origin));
+        addActiveUser(payable(address(msg.sender)));
         
         return true;
     }
@@ -231,7 +232,7 @@ contract Watering_Holes is Ownable {
         _posts[wateringHoleID_][postID_]._numberOfGallonsSupported += msg.value;
         Post memory post_ = _posts[wateringHoleID_][postID_];
         
-        taxedTransfer(msg.sender, (payable(address(this))), msg.value);
+        taxedTransfer((payable(address(msg.sender))), (payable(address(this))), msg.value);
         _owedGallonsInReservoir[post_._poster] += msg.value / 2;
         _users[post_._poster]._numberOfGallonsSupported += msg.value;
     }
@@ -240,7 +241,7 @@ contract Watering_Holes is Ownable {
         _comments[postID_][commentID_]._numberOfGallonsSupported += msg.value;
         Post memory comment_ = _comments[postID_][commentID_];
         
-        taxedTransfer(msg.sender, (payable(address(this))), msg.value);
+        taxedTransfer((payable(address(msg.sender))), (payable(address(this))), msg.value);
         _owedGallonsInReservoir[comment_._poster] += msg.value / uint(2);
         _users[comment_._poster]._numberOfGallonsSupported += msg.value;
     }
@@ -284,6 +285,7 @@ contract Watering_Holes is Ownable {
         }
     }
 
+    /**
     function airdrop(uint16 amountToDisperse_, string memory message_) public onlyOwner {
         require(amountToDisperse_ > 0, "Can not disperse 0 gallons.");
        
@@ -293,6 +295,7 @@ contract Watering_Holes is Ownable {
             
         emit airdropToActiveUsers(amountToDisperse_, message_);
     }
+    */
     
     function reinitializeBondingPeriod() internal {
         if(_bondPeriodRandomizedEnd < block.timestamp) {

@@ -4,7 +4,7 @@ pragma solidity ^0.8.3;
 
 import "./IERC20.sol";
 import "./Context.sol";
-import "./Ownable.sol"
+import "./Ownable.sol";
 
 
 /**
@@ -39,10 +39,6 @@ contract Gallons_ERC20 is Context, IERC20, Ownable {
     mapping(address => mapping(address => uint256)) private _allowances;
 
     uint256 private _totalSupply;
-    
-    address payable private _reservoir;
-
-    address private _wateringHoles;
 
     string private _name;
     string private _symbol;
@@ -60,16 +56,9 @@ contract Gallons_ERC20 is Context, IERC20, Ownable {
         _name = name_;
         _symbol = symbol_;
         
-        _totalSupply = 326000000000000000000;
-        
-        _reservoir = payable(address(this));
+        _totalSupply = 32600000000000;
     }
-
-    modifier onlyWateringHole() {
-        require(msg.sender == _wateringHole, "Wrong requestor, access deinied.");
-        _;
-    }
-
+    
     /**
      * @dev Returns the name of the token.
      */
@@ -83,20 +72,6 @@ contract Gallons_ERC20 is Context, IERC20, Ownable {
      */
     function symbol() public view virtual override returns (string memory) {
         return _symbol;
-    }
-    
-    /**
-     * @dev Returns the address of the token.
-     */
-    function reservoir() public view returns (address) {
-        return _reservoir;
-    }
-
-    /**
-     * @dev Sets WateringHoles address.
-     */
-    function setWateringHoles(address wateringHoles_) public onlyOwner {
-        _wateringHoles = wateringHoles_;
     }
 
     /**
@@ -188,40 +163,6 @@ contract Gallons_ERC20 is Context, IERC20, Ownable {
     }
 
     /**
-     * @dev See {IERC20-transferFrom}.
-     *
-     * Emits an {Approval} event indicating the updated allowance. This is not
-     * required by the EIP. See the note at the beginning of {ERC20}.
-     *
-     * Requirements:
-     *
-     * - `sender` and `recipient` cannot be the zero address.
-     * - `sender` must have a balance of at least `amount`.
-     * - the caller must have allowance for ``sender``'s tokens of at least
-     * `amount`.
-     */
-    function transferFrom(address sender, address recipient, uint256 amount, bool taxable) public virtual returns (bool) {
-        if(taxable) {
-            uint tax = amount/2;
-            tax == 0 ? tax = 1 : tax = tax;
-            uint amountAfterTax = amount - tax;
-            
-            _transfer(sender, recipient, amountAfterTax);
-            _transfer(sender, _reservoir, tax);
-        } else {
-            _transfer(sender, recipient, amount);
-        }
-
-        uint256 currentAllowance = _allowances[sender][_msgSender()];
-        require(currentAllowance >= amount, "ERC20: transfer amount exceeds allowance");
-        unchecked {
-            _approve(sender, _msgSender(), currentAllowance - amount);
-        }
-
-        return true;
-    }
-
-    /**
      * @dev Atomically increases the allowance granted to `spender` by the caller.
      *
      * This is an alternative to {approve} that can be used as a mitigation for
@@ -260,24 +201,6 @@ contract Gallons_ERC20 is Context, IERC20, Ownable {
         }
 
         return true;
-    }
-
-    /**
-     * @dev Atomically liquidates Gallons in resevoir.
-     *
-     * This is an alternative to {approve} that can be used as a mitigation for
-     * problems described in {IERC20-approve}.
-     *
-     * Emits an {Approval} event indicating the updated allowance.
-     *
-     * Requirements:
-     *
-     * - `spender` cannot be the zero address.
-     * - `spender` must have allowance for the caller of at least
-     * `subtractedValue`.
-     */
-    function liquidateResevoir(uint amountOfWei) public onlyWateringHoles returns (bool) {
-
     }
 
     /**
