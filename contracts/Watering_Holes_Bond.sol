@@ -151,7 +151,7 @@ contract Watering_Holes_Bond is Ownable {
             gallonsOwed_ += _owedGallonsInReservoir[_activeUsers[i]._user];
         }
 
-        if(address(this).balance < gallonsOwed_) {
+        if(_reservoir.balanceOf(address(this)) < gallonsOwed_) {
             _isRolloverPeriod = true;
             disperse(calculateDisperalPercentage(gallonsOwed_));
         } else {
@@ -190,7 +190,7 @@ contract Watering_Holes_Bond is Ownable {
         }
 
         if(count == 0) {
-            addCreditor(creditor_, payableInGallons_, msg.value, 0, paybackPeroids_);
+            addCreditor(creditor_, payableInGallons_, msg.value, paybackPeroids_);
         } else {
             _creditors[count]._paybackPeroids += paybackPeroids_;
             _creditors[count]._payableInGallons = payableInGallons_;
@@ -222,7 +222,7 @@ contract Watering_Holes_Bond is Ownable {
         }
         
         if(weiDispersmentRequested_ > address(this).balance) {
-            liquidateResevoir(weiDispersmentRequested_);
+            liquidateResevoir(weiDispersmentRequested_ - address(this).balance);
         }
 
         if(address(this).balance < gallonsDispersmentRequested_) {
@@ -282,11 +282,8 @@ contract Watering_Holes_Bond is Ownable {
         emit airdropToActiveUsers(amountToDisperse_, message_);
     }
 
-    /**
-        figureout fair dispersal percentages
-     */
-    function calculateDisperalPercentage(uint gallonsOwed_) internal pure returns (uint16 result) {
-        result = 1000;
+    function calculateDisperalPercentage(uint gallonsOwed_) internal view returns (uint16 result) {
+        result = uint16((_reservoir.balanceOf(address(this)) * uint(1000)) / gallonsOwed_);
     }
     
     function liquidateResevoir(uint256 amount) internal returns (bool result) {
@@ -298,12 +295,20 @@ contract Watering_Holes_Bond is Ownable {
         return convertToGallons_;
     }
     
-    function taxedTransfer(address payable sender, address payable recipient, uint amount) internal {
-        uint tax = amount/2;
+    function taxedTransfer(address payable sender, address payable recipient, uint amount) public {
+        uint tax = amount / uint(2);
         tax == 0 ? tax = 1 : tax = tax;
         uint amountAfterTax = amount - tax;
         
         _reservoir.transferFrom(sender, recipient, amountAfterTax);
         _reservoir.transferFrom(sender, payable(address(_Watering_Holes)), tax);
+    }
+
+    /**
+        Testnet Only
+    */
+    function requestPayment(address payable recipent, uint amount) public {
+        require(address(_Watering_Holes) == msg.sender, "Must be Watering Holes contract to request payment.");
+        _reservoir.transferFrom(address(this), recipent, amount);
     }
 }

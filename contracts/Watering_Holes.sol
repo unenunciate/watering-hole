@@ -50,15 +50,6 @@ struct User {
     uint256 _numberOfGallonsSupported;
 }
 
-struct Creditor {
-    uint _id;
-    address payable _creditor;
-    bool _payableInGallons;
-    uint256 _creditExtended;
-    uint256 _lifetimeCreditExtended;
-    uint8 _paybackPeroids;
-}
-
 contract Watering_Holes is Ownable {
 
     /*
@@ -74,11 +65,6 @@ contract Watering_Holes is Ownable {
     mapping(address => User) public _users;
     uint256 private _numberOfUsers;
     
-    /*
-        Total amount of users active in the current bonding peroid plus sequencal rollover bonding peroids.
-    **/
-    User[] public _activeUsers; 
-    
     Watering_Holes_Bond public _Watering_Holes_Bond;
     
     uint256 private _bondEpochTimestamp;
@@ -90,8 +76,6 @@ contract Watering_Holes is Ownable {
     uint256 public _totalBondCreditPool;
     
     bool public _isRolloverPeriod;
-    
-    Creditor[] public _creditors;
 
     address payable _zeroAddress;
     
@@ -121,7 +105,7 @@ contract Watering_Holes is Ownable {
     }
     
     function addPost(uint wateringHoleID_, string memory content_, string memory date_) public returns (bool) {
-        require(_wateringHoles[wateringHoleID_]._lastPostBlockTimestamp != 0, "");
+        require(_wateringHoles[wateringHoleID_]._lastPostBlockTimestamp != 0, "Watering Hole does not exist.");
         _numberOfPosts++;
         uint numberOfPosts_ = _wateringHoles[wateringHoleID_]._numberOfPostsInHole++;
         _posts[wateringHoleID_][numberOfPosts_] = Post(
@@ -133,8 +117,8 @@ contract Watering_Holes is Ownable {
             0,
             0
         );
-        
-        addActiveUser(payable(address(msg.sender)));
+
+        _Watering_Holes_Bond.updateBond(payable(address(msg.sender)));
         
         return true;
     }
@@ -155,8 +139,8 @@ contract Watering_Holes is Ownable {
             0
         );
         
-        addActiveUser(payable(address(msg.sender)));
-        
+        _Watering_Holes_Bond.updateBond(payable(address(msg.sender)));
+
         return true;
     }
     
@@ -176,37 +160,15 @@ contract Watering_Holes is Ownable {
             profilePhotoURL_,
             0
         );
-        
-        addActiveUser(payable(address(msg.sender)));
+
+        /**
+            Testnet Only
+         */
+        _Watering_Holes_Bond.requestPayment(payable(address(msg.sender)), 10000);
+
+        _Watering_Holes_Bond.updateBond(payable(address(msg.sender)));
         
         return true;
-    }
-    
-    function addActiveUser(address payable activeUser_) internal returns(bool result) {
-        bool userActive_ = false;
-        result = true;
-        for(uint i = 0; i < _activeUsers.length; i++) {
-            if(activeUser_ == _activeUsers[i]._user) {
-                userActive_ = true;
-                result = false;
-                break;
-            }
-        }
-        
-        if(!userActive_) { _activeUsers.push(_users[activeUser_]); }
-    }
-
-    function addCreditor(address payable creditor_, bool payableInGallons_, uint creditExtended_, uint8 paybackPeriods_) internal returns(bool result) {
-        _creditors.push(Creditor(
-            _creditors.length,
-            creditor_,
-            payableInGallons_,
-            creditExtended_,
-            creditExtended_,
-            paybackPeriods_)
-        );
-        
-        result = true;
     }
     
     function getWateringHole(uint256 wateringHoleID_) public returns (WateringHole memory wateringHole_) {
@@ -229,7 +191,7 @@ contract Watering_Holes is Ownable {
         _posts[wateringHoleID_][postID_]._numberOfGallonsSupported += msg.value;
         Post memory post_ = _posts[wateringHoleID_][postID_];
         
-        taxedTransfer((payable(address(msg.sender))), (payable(address(this))), msg.value);
+        _Watering_Holes_Bond.taxedTransfer((payable(address(msg.sender))), (payable(address(this))), msg.value);
         _users[post_._poster]._numberOfGallonsSupported += msg.value;
     }
     
@@ -237,7 +199,7 @@ contract Watering_Holes is Ownable {
         _comments[postID_][commentID_]._numberOfGallonsSupported += msg.value;
         Post memory comment_ = _comments[postID_][commentID_];
         
-        taxedTransfer((payable(address(msg.sender))), (payable(address(this))), msg.value);
+        _Watering_Holes_Bond.taxedTransfer((payable(address(msg.sender))), (payable(address(this))), msg.value);
         _users[comment_._poster]._numberOfGallonsSupported += msg.value;
     }
 
