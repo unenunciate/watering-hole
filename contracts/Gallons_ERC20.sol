@@ -55,10 +55,12 @@ contract Gallons_ERC20 is Context, IERC20, Ownable {
     constructor (string memory name_, string memory symbol_) {
         _name = name_;
         _symbol = symbol_;
+
+        _balances[msg.sender] = 126000000000;
         
-        _totalSupply = 32600000000000;
-    }
-    
+        _totalSupply = 326000000000;
+    } 
+
     /**
      * @dev Returns the name of the token.
      */
