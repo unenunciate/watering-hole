@@ -66,25 +66,11 @@ contract Watering_Holes is Ownable {
     uint256 private _numberOfUsers;
     
     Watering_Holes_Bond public _Watering_Holes_Bond;
-    
-    uint256 private _bondEpochTimestamp;
-    uint256 private _bondPeriodTimestamp;
-    uint256 private _bondPeriodNouce;
-    uint256 private _bondPeriodDuration;
-    uint256 private _bondPeriodRandomizedEnd;
-    
-    uint256 public _totalBondCreditPool;
-    
-    bool public _isRolloverPeriod;
 
-    address payable _zeroAddress;
-    
-    constructor(address payable Gallons_ERC20_) {
-        _bondEpochTimestamp = block.timestamp;
-        _bondPeriodTimestamp = _bondEpochTimestamp;
-        _bondPeriodDuration = 2629746;
-    
-        _zeroAddress = payable(address(0x0000000000000000000000000000000000000000));
+    address payable _zeroAddress = payable(address(0x0000000000000000000000000000000000000000));
+
+    function Bond(address bond_) public onlyOwner {
+        _Watering_Holes_Bond = Watering_Holes_Bond(bond_);
     }
     
     function addWateringHole(string memory localGroup_, string memory majorGroup_, string memory superiorGroup_) public returns (bool) {
@@ -151,7 +137,7 @@ contract Watering_Holes is Ownable {
         public 
         returns (bool)
     {
-        require(_users[msg.sender]._user == _zeroAddress);
+        //require(_users[msg.sender]._user != _zeroAddress);
         _numberOfUsers++;
         _users[msg.sender] = User(
             _numberOfUsers,
