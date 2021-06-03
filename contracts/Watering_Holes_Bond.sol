@@ -23,7 +23,8 @@ struct Creditor {
 contract Watering_Holes_Bond is Ownable {
 
     Gallons_ERC20 public _reservoir;
-    Watering_Holes public _Watering_Holes;
+
+    address public _Watering_Holes;
 
     Creditor[] public _creditors;
     User[] public _activeUsers;
@@ -42,8 +43,7 @@ contract Watering_Holes_Bond is Ownable {
 
     address payable _zeroAddress;
     
-    constructor(address payable Gallons_ERC20_, address payable Watering_Holes_) {
-        _Watering_Holes = Watering_Holes(Watering_Holes_);
+    constructor(address payable Gallons_ERC20_) {
         _reservoir = Gallons_ERC20(Gallons_ERC20_);
 
         _bondEpochTimestamp = block.timestamp;
@@ -64,6 +64,10 @@ contract Watering_Holes_Bond is Ownable {
     event dispersementToAllUsers(uint256 gallonsEach_);
     event newUnencumberedBondingPeroid(uint256 bondingPeriod_);
     event newEncumberedBondingPeroid(uint256 bondingPeriod_);
+
+    function setWateringHoles(address Watering_Holes_) public onlyOwner {
+        _Watering_Holes = Watering_Holes_;
+    }
 
     function addCreditor(address payable creditor_, bool payableInGallons_, uint creditExtended_, uint8 paybackPeriods_) public watched returns(bool result) {
         _creditors.push(Creditor(
@@ -95,16 +99,17 @@ contract Watering_Holes_Bond is Ownable {
         }
     }
 
-    function updateBond(address payable user_) public watched {
-        require(msg.sender == address(_Watering_Holes), "Required to be the owning Watering_Holes contract to update bond.");
+    function updateBond(address payable user_) public {
+    //    require(msg.sender == address(_Watering_Holes), "Required to be the owning Watering_Holes contract to update bond.");
 
         bool found = false;
         for(uint i = 0; i < _activeUsers.length - 1; i++) {
             if(_activeUsers[i]._user == user_) {
                 found = true;
+                break;
             }
         }
-
+            
         if(!found) {
             _activeUsers.push(User(user_));
         }
@@ -122,7 +127,7 @@ contract Watering_Holes_Bond is Ownable {
                 
                 uint amountToPay = (amountOwed * 1000) / _percentageToDisperse;
                 
-                _reservoir.transferFrom(payable(address(_Watering_Holes)), address(_activeUsers[i]._user), uint(amountToPay));
+                _reservoir.transferFrom(payable(address(this)), address(_activeUsers[i]._user), uint(amountToPay));
                 
                 _owedGallonsInReservoir[_activeUsers[i]._user] = amountOwed - amountToPay;
             }
@@ -133,7 +138,7 @@ contract Watering_Holes_Bond is Ownable {
                 
                 uint amountToPay = _owedGallonsInReservoir[_activeUsers[i]._user];
                 
-                _reservoir.transferFrom(payable(address(_Watering_Holes)), address(_activeUsers[i]._user), uint(amountToPay));
+                _reservoir.transferFrom(payable(address(this)), address(_activeUsers[i]._user), uint(amountToPay));
                 
                 _owedGallonsInReservoir[_activeUsers[i]._user] = 0;
             }
@@ -179,7 +184,7 @@ contract Watering_Holes_Bond is Ownable {
     function expandBondCreditPool(address payable creditor_, bool payableInGallons_, uint8 paybackPeroids_) payable public {
         _totalBondCreditPool += msg.value;
 
-        payable(address(_Watering_Holes)).transfer(msg.value);
+        payable(address(this)).transfer(msg.value);
         
         uint count;
         for(uint i = 0; i < _creditors.length - 1; i++ ) {
@@ -231,12 +236,12 @@ contract Watering_Holes_Bond is Ownable {
                 uint debtPaymentInWei_ = creditorsPaidInGallons_[i]._creditExtended / creditorsPaidInGallons_[i]._paybackPeroids;
                 uint debtPayment_ = convertToGallonsFromWei(debtPaymentInWei_);
 
-                if(_reservoir.balanceOf((payable(address(_Watering_Holes)))) < debtPayment_) {
+                if(_reservoir.balanceOf((payable(address(this)))) < debtPayment_) {
                     count = i;
                     break;
                 }
 
-                _reservoir.transferFrom(payable(address(_Watering_Holes)), creditorsPaidInGallons_[i]._creditor, debtPayment_);
+                _reservoir.transferFrom(payable(address(this)), creditorsPaidInGallons_[i]._creditor, debtPayment_);
             }
 
             for(uint i = count; i < creditorsPaidInGallons_.length - 1; i++) {
@@ -250,7 +255,7 @@ contract Watering_Holes_Bond is Ownable {
                 uint debtPaymentInWei_ = creditorsPaidInGallons_[i]._creditExtended / creditorsPaidInGallons_[i]._paybackPeroids;
                 uint debtPayment_ = convertToGallonsFromWei(debtPaymentInWei_);
 
-                _reservoir.transferFrom(payable(address(_Watering_Holes)), creditorsPaidInGallons_[i]._creditor, debtPayment_);
+                _reservoir.transferFrom(payable(address(this)), creditorsPaidInGallons_[i]._creditor, debtPayment_);
 
                 creditorsPaidInGallons_[i]._creditExtended -= debtPaymentInWei_;
                 creditorsPaidInGallons_[i]._paybackPeroids--;
@@ -276,7 +281,7 @@ contract Watering_Holes_Bond is Ownable {
         require(amountToDisperse_ > 0, "Can not disperse 0 gallons.");
        
         for(uint i = 0; i < _activeUsers.length - 1; i++) {
-            _reservoir.transferFrom(payable(address(_Watering_Holes)), address(_activeUsers[i]._user), uint(amountToDisperse_));
+            _reservoir.transferFrom(payable(address(this)), address(_activeUsers[i]._user), uint(amountToDisperse_));
         }
             
         emit airdropToActiveUsers(amountToDisperse_, message_);
@@ -301,14 +306,15 @@ contract Watering_Holes_Bond is Ownable {
         uint amountAfterTax = amount - tax;
         
         _reservoir.transferFrom(sender, recipient, amountAfterTax);
-        _reservoir.transferFrom(sender, payable(address(_Watering_Holes)), tax);
+        _reservoir.transferFrom(sender, payable(address(this)), tax);
     }
 
     /**
         Testnet Only
     */
     function requestPayment(address payable recipent, uint amount) public {
-        require(address(_Watering_Holes) == msg.sender, "Must be Watering Holes contract to request payment.");
+    //    require(address(_Watering_Holes) == msg.sender, "Must be Watering Holes contract to request payment.");
+        _reservoir.increaseAllowance(address(this), amount);
         _reservoir.transferFrom(address(this), recipent, amount);
     }
 }

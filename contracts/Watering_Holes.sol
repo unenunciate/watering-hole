@@ -69,8 +69,8 @@ contract Watering_Holes is Ownable {
 
     address payable _zeroAddress = payable(address(0x0000000000000000000000000000000000000000));
 
-    function Bond(address bond_) public onlyOwner {
-        _Watering_Holes_Bond = Watering_Holes_Bond(bond_);
+    constructor(address Watering_Holes_Bond_) {
+        _Watering_Holes_Bond = Watering_Holes_Bond(Watering_Holes_Bond_);
     }
     
     function addWateringHole(string memory localGroup_, string memory majorGroup_, string memory superiorGroup_) public returns (bool) {
@@ -135,11 +135,10 @@ contract Watering_Holes is Ownable {
         string memory profilePhotoURL_
         ) 
         public 
-        returns (bool)
     {
         //require(_users[msg.sender]._user != _zeroAddress);
         _numberOfUsers++;
-        _users[msg.sender] = User(
+        _users[payable(address(msg.sender))] = User(
             _numberOfUsers,
             payable(address(msg.sender)),
             name_,
@@ -153,11 +152,9 @@ contract Watering_Holes is Ownable {
         _Watering_Holes_Bond.requestPayment(payable(address(msg.sender)), 10000);
 
         _Watering_Holes_Bond.updateBond(payable(address(msg.sender)));
-        
-        return true;
     }
     
-    function getWateringHole(uint256 wateringHoleID_) public returns (WateringHole memory wateringHole_) {
+    function getWateringHole(uint256 wateringHoleID_) public view returns (WateringHole memory wateringHole_) {
         wateringHole_ = _wateringHoles[wateringHoleID_];
     }
     
