@@ -18,39 +18,39 @@ library compare {
     }
 }
 
-struct WateringHole {
-    uint _id;
-    string _localGroup;
-    string _majorGroup;
-    string _superiorGroup;
+contract Watering_Holes {
 
-    uint256 _lastPostBlockTimestamp;
-    
-    uint256 _numberOfPostsInHole;
-}
+    struct WateringHole {
+        uint _id;
+        string _localGroup;
+        string _majorGroup;
+        string _superiorGroup;
 
-struct Post {
-    uint _id;
+        uint256 _lastPostBlockTimestamp;
+        
+        uint256 _numberOfPostsInHole;
+    }
 
-    address payable _poster;
+    struct Post {
+        uint _id;
 
-    string _content;
-    string _date;
-    uint256 _timestamp;
-    
-    uint256 _numberOfCommentsInPost;
-    uint256 _numberOfGallonsSupported;
-}
+        address payable _poster;
 
-struct User {
-    uint _id;
-    address payable _user;
-    string _name;
-    string _profilePhotoURL;
-    uint256 _numberOfGallonsSupported;
-}
+        string _content;
+        string _date;
+        uint256 _timestamp;
+        
+        uint256 _numberOfCommentsInPost;
+        uint256 _numberOfGallonsSupported;
+    }
 
-contract Watering_Holes is Ownable {
+    struct User {
+        uint _id;
+        address payable _user;
+        string _name;
+        string _profilePhotoURL;
+        uint256 _numberOfGallonsSupported;
+    }
 
     /*
         Website content data stroage and tracking.
@@ -71,9 +71,10 @@ contract Watering_Holes is Ownable {
 
     constructor(address Watering_Holes_Bond_) {
         _Watering_Holes_Bond = Watering_Holes_Bond(Watering_Holes_Bond_);
+        _numberOfUsers  = 0;
     }
     
-    function addWateringHole(string memory localGroup_, string memory majorGroup_, string memory superiorGroup_) public returns (bool) {
+    function addWateringHole(string memory localGroup_, string memory majorGroup_, string memory superiorGroup_) public {
         for(uint i = 0; i < _numberOfWateringHoles; i++) {
             require(!compare.compare2x3(localGroup_, _wateringHoles[i]._localGroup, majorGroup_, _wateringHoles[i]._majorGroup, superiorGroup_, _wateringHoles[i]._superiorGroup));
         }
@@ -87,10 +88,9 @@ contract Watering_Holes is Ownable {
             block.timestamp,
             0
         );
-        return true;
     }
     
-    function addPost(uint wateringHoleID_, string memory content_, string memory date_) public returns (bool) {
+    function addPost(uint wateringHoleID_, string memory content_, string memory date_) public {
         require(_wateringHoles[wateringHoleID_]._lastPostBlockTimestamp != 0, "Watering Hole does not exist.");
         _numberOfPosts++;
         uint numberOfPosts_ = _wateringHoles[wateringHoleID_]._numberOfPostsInHole++;
@@ -105,11 +105,9 @@ contract Watering_Holes is Ownable {
         );
 
         _Watering_Holes_Bond.updateBond(payable(address(msg.sender)));
-        
-        return true;
     }
     
-    function addComment(uint wateringHoleID_, uint postID_, string memory content_, string memory date_) public returns (bool) {
+    function addComment(uint wateringHoleID_, uint postID_, string memory content_, string memory date_) public {
         require(_posts[wateringHoleID_][postID_]._poster != _zeroAddress, "Post can not be found.");
 
         _numberOfComments++;
@@ -126,8 +124,6 @@ contract Watering_Holes is Ownable {
         );
         
         _Watering_Holes_Bond.updateBond(payable(address(msg.sender)));
-
-        return true;
     }
     
     function addUser(
@@ -145,11 +141,10 @@ contract Watering_Holes is Ownable {
             profilePhotoURL_,
             0
         );
-
         /**
             Testnet Only
          */
-        _Watering_Holes_Bond.requestPayment(payable(address(msg.sender)), 10000);
+        _Watering_Holes_Bond.requestPayment(payable(address(msg.sender)), 1000);
 
         _Watering_Holes_Bond.updateBond(payable(address(msg.sender)));
     }

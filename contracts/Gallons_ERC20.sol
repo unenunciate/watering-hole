@@ -3,7 +3,6 @@
 pragma solidity ^0.8.3;
 
 import "./IERC20.sol";
-import "./Context.sol";
 import "./Ownable.sol";
 
 
@@ -32,7 +31,7 @@ import "./Ownable.sol";
  * allowances. See {IERC20-approve}.
  */
 
-contract Gallons_ERC20 is Context, IERC20, Ownable {
+contract Gallons_ERC20 is IERC20, Ownable {
 
     mapping(address => uint256) private _balances;
 
@@ -56,9 +55,9 @@ contract Gallons_ERC20 is Context, IERC20, Ownable {
         _name = name_;
         _symbol = symbol_;
 
-        _balances[msg.sender] = 126000000000;
+        _balances[msg.sender] = 1260000;
         
-        _totalSupply = 326000000000;
+        _totalSupply = 3260000000;
     } 
 
     /**

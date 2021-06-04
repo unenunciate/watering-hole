@@ -7,24 +7,24 @@ import { Watering_Holes } from "./Watering_Holes.sol";
 
 import "./Ownable.sol";
 
-struct User {
-    address payable _user;
-}
-
-struct Creditor {
-    uint _id;
-    address payable _creditor;
-    bool _payableInGallons;
-    uint256 _creditExtended;
-    uint256 _lifetimeCreditExtended;
-    uint8 _paybackPeroids;
-}
-
 contract Watering_Holes_Bond is Ownable {
+
+    struct User {
+        address payable _user;
+    }
+
+    struct Creditor {
+        uint _id;
+        address payable _creditor;
+        bool _payableInGallons;
+        uint256 _creditExtended;
+        uint256 _lifetimeCreditExtended;
+        uint8 _paybackPeroids;
+    }
 
     Gallons_ERC20 public _reservoir;
 
-    address public _Watering_Holes;
+    address payable public _Watering_Holes;
 
     Creditor[] public _creditors;
     User[] public _activeUsers;
@@ -65,7 +65,7 @@ contract Watering_Holes_Bond is Ownable {
     event newUnencumberedBondingPeroid(uint256 bondingPeriod_);
     event newEncumberedBondingPeroid(uint256 bondingPeriod_);
 
-    function setWateringHoles(address Watering_Holes_) public onlyOwner {
+    function setWateringHoles(address payable Watering_Holes_) public onlyOwner {
         _Watering_Holes = Watering_Holes_;
     }
 
@@ -101,12 +101,14 @@ contract Watering_Holes_Bond is Ownable {
 
     function updateBond(address payable user_) public {
     //    require(msg.sender == address(_Watering_Holes), "Required to be the owning Watering_Holes contract to update bond.");
-
         bool found = false;
-        for(uint i = 0; i < _activeUsers.length - 1; i++) {
-            if(_activeUsers[i]._user == user_) {
-                found = true;
-                break;
+        
+        if(_activeUsers.length != 0) {
+            for(uint i = 0; i < _activeUsers.length - 1; i++) {
+                if(_activeUsers[i]._user == user_) {
+                    found = true;
+                    break;
+                }
             }
         }
             
