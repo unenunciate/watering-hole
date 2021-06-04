@@ -2,11 +2,9 @@ import Head from 'next/head';
 import { useContext, useEffect } from 'react';
 
 import Card from '../components/card';
-import EthereumContext from '../contexts/ethereum';
 
 export default function Home( {} ) {
 
-  console.log( 'index.js', useContext(EthereumContext) );
   
   return (
     <>
