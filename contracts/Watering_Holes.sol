@@ -80,6 +80,7 @@ contract Watering_Holes {
         }
 
         _numberOfWateringHoles++;
+        
         _wateringHoles[_numberOfWateringHoles] = WateringHole(
             _numberOfWateringHoles,
             localGroup_,
@@ -92,8 +93,11 @@ contract Watering_Holes {
     
     function addPost(uint wateringHoleID_, string memory content_, string memory date_) public {
         require(_wateringHoles[wateringHoleID_]._lastPostBlockTimestamp != 0, "Watering Hole does not exist.");
+
         _numberOfPosts++;
-        uint numberOfPosts_ = _wateringHoles[wateringHoleID_]._numberOfPostsInHole++;
+        _wateringHoles[wateringHoleID_]._numberOfPostsInHole++;
+
+        uint numberOfPosts_ = _wateringHoles[wateringHoleID_]._numberOfPostsInHole;
         _posts[wateringHoleID_][numberOfPosts_] = Post(
             numberOfPosts_,
             payable(address(msg.sender)),
@@ -111,10 +115,12 @@ contract Watering_Holes {
         require(_posts[wateringHoleID_][postID_]._poster != _zeroAddress, "Post can not be found.");
 
         _numberOfComments++;
-        uint numberOfComments_ = _posts[wateringHoleID_][postID_]._numberOfCommentsInPost++;
+        _posts[wateringHoleID_][postID_]._numberOfCommentsInPost++;
+        
+        uint numberOfComments_ = _posts[wateringHoleID_][postID_]._numberOfCommentsInPost;
 
         _posts[wateringHoleID_][numberOfComments_] = Post(
-            _numberOfComments,
+            numberOfComments_,
             payable(address(msg.sender)),
             content_,
             date_,
@@ -155,6 +161,17 @@ contract Watering_Holes {
     
     function getPost(uint256 wateringHoleID_, uint256 postID_) public view returns (Post memory post_) {
         post_ = _posts[wateringHoleID_][postID_];
+        /** 
+        post_ = Post(
+            0,
+            payable(address(msg.sender)),
+            "",
+            "",
+            block.timestamp,
+            0,
+            0
+        );
+        */
     }
     
     function getComment(uint256 postID_, uint256 commentID_) public view returns (Post memory comment_) {

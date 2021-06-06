@@ -5,7 +5,7 @@ const Header = ({ overlayVisible, setOverlayVisible }) => {
     return (
         <div className='fixed top-0 flex flex-row min-w-full justify-between bg-blue-600 p-6 z-30 border-b-2 border-yellow-400 mb-24 shadow-2xl'>
             <Link href='/'>
-                <h1 className='hover:text-yellow-100 ml-4 font-holocene text-2xl text-yellow-400 cursor-pointer'>Watercooler</h1>
+                <h1 className='hover:text-yellow-100 ml-4 font-holocene text-2xl text-yellow-400 cursor-pointer'>Watering Hole</h1>
             </Link>
             {   
                 !false ? 
