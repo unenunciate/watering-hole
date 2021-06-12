@@ -368,6 +368,19 @@ export const WATERING_HOLES_ABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "getNumberOfWateringHoles",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -536,11 +549,16 @@ export const WATERING_HOLES_ABI = [
 				"internalType": "uint256",
 				"name": "commentID_",
 				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount_",
+				"type": "uint256"
 			}
 		],
 		"name": "payComment",
 		"outputs": [],
-		"stateMutability": "payable",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -554,11 +572,42 @@ export const WATERING_HOLES_ABI = [
 				"internalType": "uint256",
 				"name": "postID_",
 				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount_",
+				"type": "uint256"
 			}
 		],
 		"name": "payPost",
 		"outputs": [],
-		"stateMutability": "payable",
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "name_",
+				"type": "string"
+			}
+		],
+		"name": "updateName",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "profilePhotoURL_",
+				"type": "string"
+			}
+		],
+		"name": "updateProfilePhoto",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]

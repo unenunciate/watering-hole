@@ -12,10 +12,13 @@ import Link from 'next/link';
 const Card = ({ wateringHoleID, postID }) => {
 
     const [user, setUser] = useState({});
+    const [userLink, setUserLink] = useState('');
+
     const [post, setPost] = useState({});
+    const [postLink, setPostLink] = useState('');
+
     const [postGals, setPostGals] = useState(0);
     const [postContent, setPostContent] = useState('');
-    const [userLink, setUserLink] = useState('');
     const [loading, setLoading] = useState(true);
 
     useEffect(async function () {
@@ -26,37 +29,42 @@ const Card = ({ wateringHoleID, postID }) => {
         //setUser(await WateringHoles.getUser(post._poster));
         setUser(await WateringHoles.getUser('0x7289be8f6e14af0385e1ce5db9fcb0d096514f7a'));
 
-        setUserLink(`/user/${user._user}`);
+        setUserLink(`/profile/${user._user}`);
+        //setPostLink(`/post/${wateringHoleID}/${postID}`);
+        setPostLink(`/post/${1}/${1}`);
+
         setPostGals(parseInt(post._numberOfGallonsSupported));
 
         let temp = post._content + '';
         temp.length > 144 ? setPostContent(temp.slice(0, 141)+ '...') : setPostContent(post._content);
-        
+
         setLoading(false);
-    }, [user, post, postID, setUser, setUserLink, setLoading, setPostGals, setPostContent])
+    }, [user, post, postID, setUser, setUserLink, setLoading, setPostGals, setPostContent, setPostLink])
 
     return(
         !loading ?
         <div className='flex relative min-w-24 max-w-lg z-20 bg-blue-600 rounded-lg px-2 shadow-2xl border-yellow-400 border-2 pt-2' >
             <div className='flex flex-col z-20'>
                 <div className='flex flex-row justify-between' >
-                    <div className='pr-4 px-2' >
-                        <div className="rounded-full bg-blue-400 my-1 p-0.5">
-                            <img height={24} width={24} src={user._profilePhotoURL} className="rounded-full"/>
-                        </div>
-                    </div>
                     <Link href={userLink}>
-                        <div className='rounded py-2 w-48 h-6 truncate text-yellow-400 mt-1 bg-blue-400 px-2 font-holocene'>
+                        <div className='pr-4 px-2 cursor-pointer' >
+                            <div className="rounded-full bg-blue-400 my-1 p-0.5 ">
+                                <img height={24} width={24} src={user._profilePhotoURL} className="rounded-full"/>
+                            </div>
+                        </div>
+                    </Link>
+                    <Link href={userLink}>
+                        <div className='rounded py-2 w-48 h-6 truncate text-yellow-400 mt-1 bg-blue-400 px-2 font-holocene cursor-pointer'>
                                 <p className='-mt-2 truncate'>{user._name} {user._user}</p>
                         </div>
                     </Link>
                 </div>
-
-                <div className='bg-blue-400 rounded w-64 h-24'>
-                   <p className='-mt-2 w-64 h-24 break-words overflow-ellipsis text-yellow-400 font-holocene p-2'>{postContent}</p>
-                </div>
-
-                <div className='flex flex-row justify-between'>
+                <Link href={postLink}>
+                    <div className='bg-blue-400 rounded w-64 h-24 cursor-pointer'>
+                        <p className='-mt-2 w-64 h-24 break-words overflow-ellipsis text-yellow-400 font-holocene p-2'>{postContent}</p>
+                    </div>
+                </Link>
+                <div className='flex flex-row justify-between mt-2'>
                     <div className='rounded mr-2 my-2'>
                         <p className='-mt-2 text-blue-50'>{post._date}</p>
                     </div>
@@ -84,7 +92,7 @@ const Card = ({ wateringHoleID, postID }) => {
 
                 <div className='flex flex-row justify-between'>
                     <div className='rounded mr-2 my-2'>
-                        <Skeleton width={116} height={22} />
+                        <Skeleton width={86} height={22} />
                     </div>
                     
                     <div className='ml-2 my-2'>

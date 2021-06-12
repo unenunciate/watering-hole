@@ -69,17 +69,17 @@ contract Watering_Holes_Bond is Ownable {
         _Watering_Holes = Watering_Holes_;
     }
 
-    function addCreditor(address payable creditor_, bool payableInGallons_, uint creditExtended_, uint8 paybackPeriods_) public watched returns(bool result) {
-        _creditors.push(Creditor(
-            _creditors.length,
-            creditor_,
-            payableInGallons_,
-            creditExtended_,
-            creditExtended_,
-            paybackPeriods_)
+    function addCreditor(address payable creditor_, bool payableInGallons_, uint creditExtended_, uint8 paybackPeriods_) public watched {
+        _creditors.push(
+            Creditor(
+                _creditors.length,
+                creditor_,
+                payableInGallons_,
+                creditExtended_,
+                creditExtended_,
+                paybackPeriods_
+            )
         );
-        
-        result = true;
     }
 
     function updateBond(address payable user_, uint amount_) public watched {
@@ -243,7 +243,7 @@ contract Watering_Holes_Bond is Ownable {
                     break;
                 }
 
-                _reservoir.transferFrom(payable(address(this)), creditorsPaidInGallons_[i]._creditor, debtPayment_);
+                _reservoir.transferFrom((payable(address(this))), creditorsPaidInGallons_[i]._creditor, debtPayment_);
             }
 
             for(uint i = count; i < creditorsPaidInGallons_.length - 1; i++) {
@@ -302,13 +302,16 @@ contract Watering_Holes_Bond is Ownable {
         return convertToGallons_;
     }
     
-    function taxedTransfer(address payable sender, address payable recipient, uint amount) public {
-        uint tax = amount / uint(2);
+    function taxedTransfer(address payable sender_, address payable recipient_, uint amount_) public returns(bool) {
+        uint tax = amount_ / uint(2);
         tax == 0 ? tax = 1 : tax = tax;
-        uint amountAfterTax = amount - tax;
+        uint amountAfterTax = amount_ - tax;
+
+        _owedGallonsInReservoir[recipient_] += amountAfterTax;
         
-        _reservoir.transferFrom(sender, recipient, amountAfterTax);
-        _reservoir.transferFrom(sender, payable(address(this)), tax);
+        require(_reservoir.transferFrom(sender_, payable(address(this)), amount_), 'Transfer Failed');
+
+        return true;
     }
 
     /**

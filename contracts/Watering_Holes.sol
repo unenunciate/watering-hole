@@ -80,7 +80,7 @@ contract Watering_Holes {
         }
 
         _numberOfWateringHoles++;
-        
+
         _wateringHoles[_numberOfWateringHoles] = WateringHole(
             _numberOfWateringHoles,
             localGroup_,
@@ -99,7 +99,7 @@ contract Watering_Holes {
 
         uint numberOfPosts_ = _wateringHoles[wateringHoleID_]._numberOfPostsInHole;
         _posts[wateringHoleID_][numberOfPosts_] = Post(
-            numberOfPosts_,
+            _numberOfPosts,
             payable(address(msg.sender)),
             content_,
             date_,
@@ -119,7 +119,7 @@ contract Watering_Holes {
         
         uint numberOfComments_ = _posts[wateringHoleID_][postID_]._numberOfCommentsInPost;
 
-        _posts[wateringHoleID_][numberOfComments_] = Post(
+        _comments[postID_][numberOfComments_] = Post(
             numberOfComments_,
             payable(address(msg.sender)),
             content_,
@@ -138,7 +138,7 @@ contract Watering_Holes {
         ) 
         public 
     {
-        //require(_users[msg.sender]._user != _zeroAddress);
+        require(_users[msg.sender]._user == _zeroAddress);
         _numberOfUsers++;
         _users[payable(address(msg.sender))] = User(
             _numberOfUsers,
@@ -158,20 +158,11 @@ contract Watering_Holes {
     function getWateringHole(uint256 wateringHoleID_) public view returns (WateringHole memory wateringHole_) {
         wateringHole_ = _wateringHoles[wateringHoleID_];
     }
+
+    function getNumberOfWateringHoles() public view returns (uint) { return _numberOfWateringHoles; }
     
     function getPost(uint256 wateringHoleID_, uint256 postID_) public view returns (Post memory post_) {
         post_ = _posts[wateringHoleID_][postID_];
-        /** 
-        post_ = Post(
-            0,
-            payable(address(msg.sender)),
-            "",
-            "",
-            block.timestamp,
-            0,
-            0
-        );
-        */
     }
     
     function getComment(uint256 postID_, uint256 commentID_) public view returns (Post memory comment_) {
@@ -181,24 +172,38 @@ contract Watering_Holes {
     function getUser(address userAddress_) public view returns (User memory){
         return _users[userAddress_];
     }
-    
-    function payPost(uint256 wateringHoleID_, uint256 postID_) payable public {
-        _posts[wateringHoleID_][postID_]._numberOfGallonsSupported += msg.value;
-        Post memory post_ = _posts[wateringHoleID_][postID_];
-        
-        _Watering_Holes_Bond.taxedTransfer((payable(address(msg.sender))), (payable(address(this))), msg.value);
-        _users[post_._poster]._numberOfGallonsSupported += msg.value;
-    }
-    
-    function payComment(uint256 postID_, uint256 commentID_) payable public {
-        _comments[postID_][commentID_]._numberOfGallonsSupported += msg.value;
-        Post memory comment_ = _comments[postID_][commentID_];
-        
-        _Watering_Holes_Bond.taxedTransfer((payable(address(msg.sender))), (payable(address(this))), msg.value);
-        _users[comment_._poster]._numberOfGallonsSupported += msg.value;
+
+    function updateName(string calldata name_) public {
+        require(_users[address(msg.sender)]._user != _zeroAddress, 'The zero address is not a vaild input.');
+        require(_users[address(msg.sender)]._user == address(msg.sender), 'User not found, can not update.');
+
+        _users[address(msg.sender)]._name = name_;
     }
 
-    function updateBond(address payable user_, uint amount_) internal {
-        _Watering_Holes_Bond.updateBond(user_, amount_);
+    function updateProfilePhoto(string calldata profilePhotoURL_) public {
+        require(_users[address(msg.sender)]._user != _zeroAddress, 'The zero address is not a vaild input.');
+        require(_users[address(msg.sender)]._user == address(msg.sender), 'User not found, can not update.');
+
+        _users[address(msg.sender)]._profilePhotoURL = profilePhotoURL_;
+    }
+    
+    function payPost(uint256 wateringHoleID_, uint256 postID_, uint256 amount_) public {
+        require(_users[address(msg.sender)]._user == address(msg.sender), 'User not found, can not update.');
+        
+        _posts[wateringHoleID_][postID_]._numberOfGallonsSupported += amount_;
+        Post memory post_ = _posts[wateringHoleID_][postID_];
+        
+        require(_Watering_Holes_Bond.taxedTransfer((payable(address(msg.sender))), post_._poster, amount_), 'Transfer Failed!');
+        _users[post_._poster]._numberOfGallonsSupported += amount_;
+    }
+    
+    function payComment( uint256 postID_, uint256 commentID_, uint256 amount_) public {
+        require(_users[address(msg.sender)]._user == address(msg.sender), 'User not found, can not update.');
+
+        _comments[postID_][commentID_]._numberOfGallonsSupported += amount_;
+        Post memory comment_ = _comments[postID_][commentID_];
+        
+        require(_Watering_Holes_Bond.taxedTransfer((payable(address(msg.sender))), comment_._poster, amount_), 'Transfer Failed!');
+        _users[comment_._poster]._numberOfGallonsSupported += amount_;
     }
 }

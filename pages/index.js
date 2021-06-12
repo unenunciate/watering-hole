@@ -8,7 +8,7 @@ export default function Home( {} ) {
   
   return (
     <>
-      <div className='relative flex flex-col sm:flex-wrap sm:flex-row max-w-full justify-around items-center pb-12 mb-2 mx-4 z-10 pt-24'>
+      <div className='relative flex flex-col sm:flex-wrap sm:flex-row max-w-full justify-around items-center py-24 mb-2 mx-4 z-10 pt-24'>
         {
           !false ?
             <>
