@@ -209,6 +209,11 @@ export const WATERING_HOLES_ABI = [
 				"internalType": "uint256",
 				"name": "_numberOfPostsInHole",
 				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_pictureURL",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -298,6 +303,11 @@ export const WATERING_HOLES_ABI = [
 			{
 				"internalType": "string",
 				"name": "superiorGroup_",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "pictureURL_",
 				"type": "string"
 			}
 		],
@@ -528,6 +538,11 @@ export const WATERING_HOLES_ABI = [
 						"internalType": "uint256",
 						"name": "_numberOfPostsInHole",
 						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_pictureURL",
+						"type": "string"
 					}
 				],
 				"internalType": "struct Watering_Holes.WateringHole",

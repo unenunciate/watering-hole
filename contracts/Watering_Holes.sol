@@ -29,6 +29,8 @@ contract Watering_Holes {
         uint256 _lastPostBlockTimestamp;
         
         uint256 _numberOfPostsInHole;
+
+        string _pictureURL;
     }
 
     struct Post {
@@ -74,7 +76,7 @@ contract Watering_Holes {
         _numberOfUsers  = 0;
     }
     
-    function addWateringHole(string memory localGroup_, string memory majorGroup_, string memory superiorGroup_) public {
+    function addWateringHole(string memory localGroup_, string memory majorGroup_, string memory superiorGroup_, string memory pictureURL_) public {
         for(uint i = 0; i < _numberOfWateringHoles; i++) {
             require(!compare.compare2x3(localGroup_, _wateringHoles[i]._localGroup, majorGroup_, _wateringHoles[i]._majorGroup, superiorGroup_, _wateringHoles[i]._superiorGroup));
         }
@@ -87,7 +89,9 @@ contract Watering_Holes {
             majorGroup_,
             superiorGroup_,
             block.timestamp,
-            0
+            0,
+            pictureURL_
+
         );
     }
     
