@@ -7,6 +7,7 @@ import Ethers from '../lib/ethers';
 import { ethers } from 'ethers';
 
 import WateringHoleCard from '../components/watering-hole-card';
+import AddButton from '../components/add-button';
 
 export default function Home( { holes } ) {
   const parsedHoles = JSON.parse(holes);
@@ -23,6 +24,12 @@ export default function Home( { holes } ) {
               }
             </>
         }
+      </div>
+      
+      <div className='fixed z-40 right-1 bottom-20'>
+        <div className='text-yellow-400'>
+          <AddButton type={0} />
+        </div>
       </div>
     </>
   );

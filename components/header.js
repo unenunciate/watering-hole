@@ -1,6 +1,19 @@
 import Link from 'next/link';
 
+import EthersContext from '../contexts/ethers'
+
+import {useState, useEffect, useContext} from 'react';
+
+/*    <input autoComplete='off' 
+        onChange={event => setLoggedIn(event.target.value) }></input>
+        */
+
 const Header = ({ overlayVisible, setOverlayVisible }) => {
+    const [loggedIn, setLoggedIn] = useState(false);
+    const legacyEthersContext = useContext(EthersContext);
+    
+    
+    useEffect(() => { legacyEthersContext || window.ethereum ? setLoggedIn(true) : setLoggedIn(false); }, [legacyEthersContext]);
     
     return (
         <div className='fixed top-0 flex flex-row min-w-full justify-between bg-blue-600 p-6 z-50 border-b-2 border-yellow-400 mb-24 shadow-2xl'>
@@ -8,7 +21,7 @@ const Header = ({ overlayVisible, setOverlayVisible }) => {
                 <h1 className='hover:text-yellow-100 ml-4 font-holocene text-2xl text-yellow-400 cursor-pointer'>Watering Hole</h1>
             </Link>
             {   
-                !false ? 
+                !loggedIn ? 
                 <div>
                     <button onClick={() => setOverlayVisible(!overlayVisible)} className='shadow-2xl pl-1 flex flex-row rounded cursor-pointer hover:bg-yellow-100 active:bg-yellow-200 bg-yellow-400 mt-1 mr-4'>
                         <svg xmlns='http://www.w3.org/2000/svg' className='h-6 w-6 text-blue-600' fill='none' viewBox='0 0 24 24' stroke='currentColor'>

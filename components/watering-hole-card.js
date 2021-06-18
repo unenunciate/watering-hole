@@ -11,9 +11,7 @@ import Link from 'next/link';
 
 const WateringHoleCard = ({ hole }) => {
 
-    const holeLink = `/wateringHoles/${hole[0]}`;
-    const topicLink = `/topics/${hole[3]}`;
-    const categoryLink = `/category/${hole[2]}`;
+    const holeLink = `/watering-holes/${parseInt(hole[0]._hex, 16)}/`;
 
     return(
         <div className='flex relative min-w-24 max-w-lg z-20 bg-blue-600 rounded-lg px-2 shadow-2xl border-yellow-400 border-2 pt-2' >
@@ -28,7 +26,7 @@ const WateringHoleCard = ({ hole }) => {
                     </Link>
                     
                     <div className='rounded py-2 w-48 h-6 truncate text-yellow-400 mt-1 bg-blue-400 px-2 font-holocene cursor-pointer'>
-                            <p className='-mt-2'> <Link href={categoryLink}>{hole[2]}</Link> ...  <Link href={topicLink}>{hole[3]}</Link></p>
+                            <p className='-mt-2'> </p>
                     </div>
                 </div>
                 <Link href={holeLink}>

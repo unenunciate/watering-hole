@@ -9,6 +9,7 @@ module.exports = async function() {
     let Holes = await Watering_Holes.deployed();
     Bond.setWateringHoles(Holes.address, {from: accounts[0]});               
     Holes.addUser("Patrick", "https://pbs.twimg.com/profile_images/1169702872923197441/ObnSX4Ti_400x400.jpg", {from: accounts[0]});
+    Holes.addWateringHole("Banana via Sunglasses", "", "Art", "https://pbs.twimg.com/profile_images/1169702872923197441/ObnSX4Ti_400x400.jpg", {from: accounts[0]});
     Holes.addWateringHole("Arts", "", "Art", "https://pbs.twimg.com/profile_images/1169702872923197441/ObnSX4Ti_400x400.jpg", {from: accounts[0]});
     Holes.addWateringHole("Technologies", "", "Technology", {from: accounts[0]});
     Holes.addWateringHole("Cultures", "", "https://pbs.twimg.com/profile_images/1169702872923197441/ObnSX4Ti_400x400.jpg", "Culture", {from: accounts[0]});
@@ -17,7 +18,7 @@ module.exports = async function() {
     Holes.addWateringHole("Film", "", "Film", {from: accounts[0]});
     Holes.addWateringHole("Television", "", "Television", {from: accounts[0]});
     Holes.addWateringHole("Books", "", "Books", {from: accounts[0]});
-    Holes.addPost(1, "This is a sample post", "12/25/2021", {from: accounts[0]});
+    Holes.addPost(1, "This is a sample post 2", "12/25/2021", {from: accounts[0]});
     Holes.addComment(1, 1, "This is a sample post", "12/25/2021", {from: accounts[0]});
     Holes.payPost(1, 1, 199, {from: accounts[0]});
     Holes.getPost(1, 1, 199, {from: accounts[0]});

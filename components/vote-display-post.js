@@ -7,7 +7,7 @@ import { ethers } from 'ethers';
 import { useState, useContext } from 'react';
 
 
-const VoteDisplayPost = ({ isVisible, setIsVisible, data, wateringHoleID, alerts, alertsDispatch }) => {
+const VoteDisplayPost = ({ isVisible, setIsVisible, data, wID, alerts, alertsDispatch }) => {
     
     const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , Ethers.getSigner('0x7289Be8F6E14AF0385e1Ce5DB9fcb0d096514F7A') );
 
@@ -20,7 +20,7 @@ const VoteDisplayPost = ({ isVisible, setIsVisible, data, wateringHoleID, alerts
                 <input dir='rtl' type='number' min='0' placeholder=' Gals' className='mb-1 font-holocene bg-blue-400 mr-4 text-white' value={galsToTransfer} onChange={function(e) {setGalsToTransfer(e.target.value);}}></input>
                 <button type='reset' onClick={() => {
                     setIsVisible(!isVisible);
-                    WateringHoles.payPost(wateringHoleID, parseInt(data.post[0]._hex, 16), galsToTransfer);
+                    WateringHoles.payPost(wID, parseInt(data.post[0]._hex, 16), galsToTransfer);
                     setGalsToTransfer(100);
                     alertsDispatch('addAlert');
                 }} className='bg-blue-600 border-yellow-400 border rounded text-yellow-400 p-1'>
