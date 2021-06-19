@@ -53,6 +53,8 @@ contract Watering_Holes {
         string _profilePhotoURL;
         uint256 _numberOfGallonsSupported;
         string _topic;
+        uint256 _numberOfPosts;
+        Post _lastestPost;
     }
 
     /*
@@ -92,7 +94,6 @@ contract Watering_Holes {
             block.timestamp,
             0,
             pictureURL_
-
         );
     }
     
@@ -113,7 +114,7 @@ contract Watering_Holes {
             0
         );
 
-        _Watering_Holes_Bond.updateBond(payable(address(msg.sender)));
+        _Watering_Holes_Bond.updateBond(payable(address(msg.sender)), 0);
     }
     
     function addComment(uint wateringHoleID_, uint postID_, string memory content_, string memory date_) public {
@@ -134,7 +135,7 @@ contract Watering_Holes {
             0
         );
         
-        _Watering_Holes_Bond.updateBond(payable(address(msg.sender)));
+        _Watering_Holes_Bond.updateBond(payable(address(msg.sender)), 0);
     }
     
     function addUser(
@@ -152,14 +153,19 @@ contract Watering_Holes {
             name_,
             profilePhotoURL_,
             0,
-            topic_
-        );
-        /**
-            Testnet Only
-         */
-        _Watering_Holes_Bond.requestPayment(payable(address(msg.sender)), 1000);
+            topic_,
+            0,
+            Post(
+                0,
+                _zeroAddress,
+                '',
+                '',
+                0,
+                0,
+                0
+            ));
 
-        _Watering_Holes_Bond.updateBond(payable(address(msg.sender)));
+        _Watering_Holes_Bond.updateBond(payable(address(msg.sender)), 0);
     }
     
     function getWateringHole(uint256 wateringHoleID_) public view returns (WateringHole memory wateringHole_) {

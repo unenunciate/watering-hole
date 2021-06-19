@@ -65,10 +65,6 @@ contract Watering_Holes_Bond is Ownable {
     event newUnencumberedBondingPeroid(uint256 bondingPeriod_);
     event newEncumberedBondingPeroid(uint256 bondingPeriod_);
 
-    function setWateringHoles(address payable Watering_Holes_) public onlyOwner {
-        _Watering_Holes = Watering_Holes_;
-    }
-
     function addCreditor(address payable creditor_, bool payableInGallons_, uint creditExtended_, uint8 paybackPeriods_) public watched {
         _creditors.push(
             Creditor(
@@ -99,22 +95,8 @@ contract Watering_Holes_Bond is Ownable {
         }
     }
 
-    function updateBond(address payable user_) public {
-    //    require(msg.sender == address(_Watering_Holes), "Required to be the owning Watering_Holes contract to update bond.");
-        bool found = false;
-        
-        if(_activeUsers.length != 0) {
-            for(uint i = 0; i < _activeUsers.length - 1; i++) {
-                if(_activeUsers[i]._user == user_) {
-                    found = true;
-                    break;
-                }
-            }
-        }
-            
-        if(!found) {
-            _activeUsers.push(User(user_));
-        }
+    function getAmountOwed(address user_) public view {
+        _owedGallonsInReservoir[user_];
     }
 
     function disperse(uint16 _percentageToDisperse) internal {
@@ -172,6 +154,8 @@ contract Watering_Holes_Bond is Ownable {
                 delete _owedGallonsInReservoir[_activeUsers[i]._user];
             }
 
+            airdrop(1000, "Monthly Active User Award, n.");
+
             delete _activeUsers;
         }
         
@@ -185,8 +169,6 @@ contract Watering_Holes_Bond is Ownable {
     
     function expandBondCreditPool(address payable creditor_, bool payableInGallons_, uint8 paybackPeroids_) payable public {
         _totalBondCreditPool += msg.value;
-
-        payable(address(this)).transfer(msg.value);
         
         uint count;
         for(uint i = 0; i < _creditors.length - 1; i++ ) {
@@ -293,33 +275,25 @@ contract Watering_Holes_Bond is Ownable {
         result = uint16((_reservoir.balanceOf(address(this)) * uint(1000)) / gallonsOwed_);
     }
     
+    /** Unsure of where exactly to get liquidity pools to liquidate without affecting the market pirce largely. */
     function liquidateResevoir(uint256 amount) internal returns (bool result) {
-        
+        return false;
     }
 
-
+    /** Unsure of where exactly to poll for price data. */
     function convertToGallonsFromWei(uint convertToGallons_) internal pure returns (uint results) {
         return convertToGallons_;
     }
     
-    function taxedTransfer(address payable sender_, address payable recipient_, uint amount_) public returns(bool) {
+    function taxedTransfer(address payable sender_, address payable recipient_, uint amount_) public returns(bool result) {
         uint tax = amount_ / uint(2);
         tax == 0 ? tax = 1 : tax = tax;
         uint amountAfterTax = amount_ - tax;
 
         _owedGallonsInReservoir[recipient_] += amountAfterTax;
+
+        result = _reservoir.transferFrom(sender_, payable(address(this)), amount_);
         
-        require(_reservoir.transferFrom(sender_, payable(address(this)), amount_), 'Transfer Failed');
-
-        return true;
-    }
-
-    /**
-        Testnet Only
-    */
-    function requestPayment(address payable recipent, uint amount) public {
-    //    require(address(_Watering_Holes) == msg.sender, "Must be Watering Holes contract to request payment.");
-        _reservoir.increaseAllowance(address(this), amount);
-        _reservoir.transferFrom(address(this), recipent, amount);
+        require(result, 'Failed transfer.');
     }
 }

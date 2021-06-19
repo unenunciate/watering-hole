@@ -8,8 +8,6 @@ const Overlay = ({ overlayVisible, setOverlayVisible }) => {
             <div className='min-w-full z-30 fixed mt-20 '>
                 <div className='flex flex-row text-yellow-400 shadow-2xl rounded-xl min-w-full border-yellow-400 border-b-2'>
                     <div className='flex flex-col w-full border-r-2 border-yellow-400'>
-                        
-
                         <Link href={`https://join.status.im/browse/${DAPP_ADDRESS}`}>
                             <button className='group' onClick={
                                         () => {

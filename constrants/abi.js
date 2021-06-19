@@ -1,4 +1,4 @@
-export const WATERING_HOLES_ABI = [
+export const WATERING_HOLES_ABI =[
 	{
 		"inputs": [
 			{
@@ -165,6 +165,58 @@ export const WATERING_HOLES_ABI = [
 				"internalType": "uint256",
 				"name": "_numberOfGallonsSupported",
 				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_topic",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_numberOfPosts",
+				"type": "uint256"
+			},
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address payable",
+						"name": "_poster",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_content",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_date",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_numberOfCommentsInPost",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_numberOfGallonsSupported",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct Watering_Holes.Post",
+				"name": "_lastestPost",
+				"type": "tuple"
 			}
 		],
 		"stateMutability": "view",
@@ -280,6 +332,11 @@ export const WATERING_HOLES_ABI = [
 			{
 				"internalType": "string",
 				"name": "profilePhotoURL_",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "topic_",
 				"type": "string"
 			}
 		],
@@ -487,6 +544,58 @@ export const WATERING_HOLES_ABI = [
 						"internalType": "uint256",
 						"name": "_numberOfGallonsSupported",
 						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_topic",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_numberOfPosts",
+						"type": "uint256"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "_id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address payable",
+								"name": "_poster",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "_content",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "_date",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "_timestamp",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "_numberOfCommentsInPost",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "_numberOfGallonsSupported",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct Watering_Holes.Post",
+						"name": "_lastestPost",
+						"type": "tuple"
 					}
 				],
 				"internalType": "struct Watering_Holes.User",
@@ -1304,6 +1413,19 @@ export const GALLONS_ERC20_ABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "user_",
+				"type": "address"
+			}
+		],
+		"name": "getAmountOwed",
+		"outputs": [],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "owner",
 		"outputs": [
@@ -1319,37 +1441,6 @@ export const GALLONS_ERC20_ABI = [
 	{
 		"inputs": [],
 		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address payable",
-				"name": "recipent",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "requestPayment",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address payable",
-				"name": "Watering_Holes_",
-				"type": "address"
-			}
-		],
-		"name": "setWateringHoles",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -1376,7 +1467,7 @@ export const GALLONS_ERC20_ABI = [
 		"outputs": [
 			{
 				"internalType": "bool",
-				"name": "",
+				"name": "result",
 				"type": "bool"
 			}
 		],
@@ -1392,19 +1483,6 @@ export const GALLONS_ERC20_ABI = [
 			}
 		],
 		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address payable",
-				"name": "user_",
-				"type": "address"
-			}
-		],
-		"name": "updateBond",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
