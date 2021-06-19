@@ -5,29 +5,29 @@ import VoteDisplayComment from './vote-display-comment';
 import Link from 'next/link';
 
 const Comment = ({ data, postID, alerts, alertsDispatch }) => {
-    const parsedGals = parseInt(data.post[6]._hex, 16);
+    const parsedGals = parseInt(data.post[6].hex, 16);
     const userLink = `/user/${data.user[1]}`;
 
     const [voteVisible, setVoteVisible] = useState(false);
 
     return (
-        <div className='flex justify-center'>
-            <div className='flex w-2/3 bg-blue-600 rounded-lg shadow-2xl border-yellow-400 border-2 flex-col items-center mb-4'>
+        <div className='flex justify-center mt-6'>
+            <div className='flex w-2/3 bg-blue-400 rounded-lg shadow-2xl border-yellow-400 border-2 flex-col items-center mb-4'>
                 <div className='flex flex-row justify-between' >
                     <Link href={userLink}>
                         <div className='pr-4 px-2 cursor-pointer' >
-                            <div className="rounded-full bg-blue-400 my-1 p-0.5 ">
+                            <div className="rounded-full bg-yellow-400 my-1 p-0.5 ">
                                 <img height={24} width={24} src={data.user[3]} className="rounded-full"/>
                             </div>
                         </div>
                     </Link>
                     <Link href={userLink}>
-                        <div className='rounded py-2 w-48 h-6 truncate text-yellow-400 mt-1 bg-blue-400 px-2 font-holocene cursor-pointer'>
+                        <div className='rounded py-2 w-48 h-6 truncate text-blue-600 border-blue-600 border mt-1 bg-blue-400 px-2 font-holocene cursor-pointer'>
                                 <p className='-mt-2 truncate'>{data.user[2]}    {data.user[1]}</p>
                         </div>
                     </Link>
                 </div>
-                <div className='bg-blue-400 font-holocene text-yellow-400 w-5/6 break-words rounded mb-2 p-1'>
+                <div className='bg-yellow-400 font-holocene text-yellow-600 border border-yellow-600 w-5/6 break-words rounded mb-2 p-1'>
                     {data.post[2]}
                 </div>
                 <div className='flex flex-row font-holocene text-yellow-400 justify-between'>

@@ -11,8 +11,9 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import Overlay from '../components/overlay';
 
-import Ethers from '../lib/ethers';
+import {EtherProvider, useEtherProvider, useAccount} from 'use-ether-provider';
 import {ethers} from 'ethers';
+
 import EthersContext from '../contexts/ethers';
 
 import AlertsDisplay from '../components/alerts-display'
@@ -40,26 +41,21 @@ const App = ({ Component, pageProps }) => {
     }
   }
 
+
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [showAlerts, setShowAlerts] = useState(false);
   const [alerts, alertsDispatch] = useReducer(alertReducer, []);
 
-  useEffect(async function () {
-    const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , Ethers );
-    
-    const user = await WateringHoles.getUser('0x7289be8f6e14af0385e1ce5db9fcb0d096514f7a');
-  }, [])
-
-  return (
-      <EthersContext.Provider value={Ethers} >
-            <div className='bg-hero-pattern bg-yellow-100 min-w-full z-auto min-h-screen w-screen max-w-full'>
-                <Overlay overlayVisible={overlayVisible} setOverlayVisible={setOverlayVisible} />
-                {showAlerts && <AlertsDisplay alerts={alerts} alertsDispatch={alertsDispatch} />}
-                <Header overlayVisible={overlayVisible} setOverlayVisible={setOverlayVisible} />
-                <Component {...pageProps} alerts={alerts} alertsDispatch={alertsDispatch}/>
-                <Footer />
-            </div>
-      </EthersContext.Provider>
+  return (      
+        <EtherProvider networks={[5777]} backupJsonRpcUrl={'HTTP://192.168.0.151:9545'} ms={10000}>
+          <div className='bg-hero-pattern bg-yellow-100 min-w-full z-auto min-h-screen w-screen max-w-full'>
+              <Overlay overlayVisible={overlayVisible} setOverlayVisible={setOverlayVisible} />
+              {showAlerts && <AlertsDisplay alerts={alerts} alertsDispatch={alertsDispatch} />}
+              <Header overlayVisible={overlayVisible} setOverlayVisible={setOverlayVisible} />
+              <Component {...pageProps} alerts={alerts} alertsDispatch={alertsDispatch}/>
+              <Footer />
+          </div>
+        </EtherProvider>
   )
 }
 

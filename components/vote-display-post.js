@@ -1,6 +1,12 @@
 import { WATERING_HOLES_ABI } from '../constrants/abi';
 import { WATERING_HOLES_ADDRESS } from '../constrants/index';
 
+import { WATERING_HOLES_BOND_ADDRESS } from '../constrants/index';
+import { WATERING_HOLES_BOND_ABI } from '../constrants/abi';
+
+import { GALLONS_ERC20_ADDRESS } from '../constrants/index';
+import { GALLONS_ERC20_ABI } from '../constrants/abi';
+
 import Ethers from '../lib/ethers';
 import { ethers } from 'ethers';
 
@@ -10,21 +16,23 @@ import { useState, useContext } from 'react';
 const VoteDisplayPost = ({ isVisible, setIsVisible, data, wID, alerts, alertsDispatch }) => {
     
     const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , Ethers.getSigner('0x7289Be8F6E14AF0385e1Ce5DB9fcb0d096514F7A') );
+    const GallonsERC20 = new ethers.Contract( GALLONS_ERC20_ADDRESS , GALLONS_ERC20_ABI , Ethers.getSigner('0x7289Be8F6E14AF0385e1Ce5DB9fcb0d096514F7A'));
 
     const [galsToTransfer, setGalsToTransfer] = useState(100);
 
     return (
         isVisible?
-        <div className='relative bg-blue-600 border-yellow-400 border rounded text-yellow-400 mb-2'>
+        <div className='relative bg-blue-400 from-yellow-600 border-blue-600 border rounded text-yellow-400 mb-2'>
             <form className='p-2'>
-                <input dir='rtl' type='number' min='0' placeholder=' Gals' className='mb-1 font-holocene bg-blue-400 mr-4 text-white' value={galsToTransfer} onChange={function(e) {setGalsToTransfer(e.target.value);}}></input>
-                <button type='reset' onClick={() => {
+                <input dir='rtl' type='number' min='0' placeholder=' Gals' className='rounded border-yellow-600 border mb-1 font-holocene bg-yellow-400 mr-4 text-yellow-600 outline-none' value={galsToTransfer} onChange={function(e) {setGalsToTransfer(e.target.value);}}></input>
+                <button type='reset' onClick={async () => {
                     setIsVisible(!isVisible);
-                    WateringHoles.payPost(wID, parseInt(data.post[0]._hex, 16), galsToTransfer);
+                    await GallonsERC20.increaseAllowance(WATERING_HOLES_ADDRESS, galsToTransfer);
+                    WateringHoles.payPost(wID, parseInt(data.post[0].hex, 16), galsToTransfer);
                     setGalsToTransfer(100);
                     alertsDispatch('addAlert');
-                }} className='bg-blue-600 border-yellow-400 border rounded text-yellow-400 p-1'>
-                    <svg xmlns='http://www.w3.org/2000/svg' xlink='http://www.w3.org/1999/xlink' viewBox='0 0 550.9 550.9' className='h-4 w-4 fill-current' space='preserve'>
+                }} className='bg-blue-600 border-blue-400 border rounded p-1'>
+                    <svg xmlns='http://www.w3.org/2000/svg' xlink='http://www.w3.org/1999/xlink' viewBox='0 0 550.9 550.9' className='h-4 w-4 text-yellow-400 fill-current' space='preserve'>
                         <path d='M275.15,133.5L275.15,133.5c-102.2,0-185.4,28.8-185.4,63.6l43.5,304.8c0,26.899,63.6,49,142,49c78.4,0,142-22,142-49
                             l42.8-304.8C460.55,161.7,377.351,133.5,275.15,133.5z M275.15,241.8c-53.9,0-102.2-8-136.5-20.8l42.2,299.9
                             c-6.7-1.801-12.9-4.301-18.4-6.7l-42.8-301.7c-6.1-3.1-11.6-6.7-15.9-10.4c28.2-22.6,94.2-39.2,170.7-39.2l0,0

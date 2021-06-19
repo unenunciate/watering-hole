@@ -20,10 +20,10 @@ const Card = ({ wID, data }) => {
         const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , Ethers );
 
         setUser(await WateringHoles.getUser(data[1]));
-        setPostGals(parseInt(data[6]._hex, 16));
+        setPostGals(parseInt(data[6].hex, 16));
 
         setUserLink(`/profile/${data[1]}`);
-        setPostLink(`/watering-holes/${wID}/${parseInt(data[0]._hex)}`);
+        setPostLink(`/watering-holes/${wID}/${parseInt(data[0].hex)}`);
     }, [user, setUser, setPostGals, setUserLink, setPostLink]);
 
     return(
@@ -50,7 +50,7 @@ const Card = ({ wID, data }) => {
                 </Link>
                 <div className='flex flex-row justify-between mt-2'>
                     <div className='rounded mr-2 my-2'>
-                        <p className='-mt-2 text-blue-50'>{parseInt(data[4]._hex, 16)}</p>
+                        <p className='-mt-2 text-blue-50'>{parseInt(data[4].hex, 16)}</p>
                     </div>
                     
                     <div className='ml-2 my-2'>

@@ -52,6 +52,7 @@ contract Watering_Holes {
         string _name;
         string _profilePhotoURL;
         uint256 _numberOfGallonsSupported;
+        string _topic;
     }
 
     /*
@@ -138,7 +139,8 @@ contract Watering_Holes {
     
     function addUser(
         string memory name_,
-        string memory profilePhotoURL_
+        string memory profilePhotoURL_,
+        string memory topic_
         ) 
         public 
     {
@@ -149,7 +151,8 @@ contract Watering_Holes {
             payable(address(msg.sender)),
             name_,
             profilePhotoURL_,
-            0
+            0,
+            topic_
         );
         /**
             Testnet Only

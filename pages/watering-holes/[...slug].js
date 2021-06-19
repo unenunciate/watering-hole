@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { WATERING_HOLES_ADDRESS } from '../../constrants/index';
 import { WATERING_HOLES_ABI } from '../../constrants/abi';
 
-import Ethers from '../../lib/ethers';
+import {EtherProvider, useEtherProvider, useAccount} from 'use-ether-provider';
 import { ethers } from 'ethers';
 
 
@@ -15,7 +15,6 @@ import VoteDisplayPost from '../../components/vote-display-post';
 import Link from 'next/link';
 
 export default function WateringHole( { pageContent, whData, alertsDispatch } )  {
-    const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , Ethers );
     const content = JSON.parse(pageContent);
     const wateringHoleData = JSON.parse(whData);
 
@@ -29,7 +28,7 @@ export default function WateringHole( { pageContent, whData, alertsDispatch } ) 
                 <div className='mt-20'>
                     {
                         content.map((item) => {
-                            return <Card wID={parseInt(wateringHoleData[0]._hex, 16)} pID={item[1]} data={item} />
+                            return <Card wID={parseInt(wateringHoleData[0].hex, 16)} pID={item[1]} data={item} />
                         })
                     }
                 </div>
@@ -37,7 +36,7 @@ export default function WateringHole( { pageContent, whData, alertsDispatch } ) 
 
             <div className='fixed z-40 right-1 bottom-20'>
                 <div className='text-yellow-400'>
-                    <AddButton type={1} wID={parseInt(wateringHoleData[0]._hex, 16)}/>
+                    <AddButton type={1} wID={parseInt(wateringHoleData[0].hex, 16)}/>
                 </div>
             </div>
         </>
@@ -46,7 +45,8 @@ export default function WateringHole( { pageContent, whData, alertsDispatch } ) 
 
 
 export async function getServerSideProps ( { query } ) {
-    const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , Ethers );
+    const serverProvider = new ethers.providers.JsonRpcProvider('HTTP://192.168.0.151:9545');
+    const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , serverProvider);
     const { slug } = query;
 
     const wateringHole = await WateringHoles.getWateringHole(slug[0]);

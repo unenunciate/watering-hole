@@ -1,8 +1,10 @@
-export const DAPP_ADDRESS = 'http://www.watercooler.blue';
+export const DAPP_ADDRESS = 'http://www.wateringhole.blue';
 
 export const WATERING_HOLES_ADDRESS = '0x5490aC793BF54fECaD83F664D7D0a5AB1B844772';
 
-export const WATERING_HOLES_BOND_ADDRESS = '0xEcd90555068BA201B0Ad0d1b192FbfFc44add52d';
+export const GALLONS_ERC20_ADDRESS = '0xb5f54399663d7f6426b596d494790EbC8012028E';
+
+export const WATERING_HOLES_BOND_ADDRESS = '0x83762D5eAa38D7038af4CE083f489bCfbfbB6e71';
 
 //dilemma swear gate uniform friend vapor gentle spoon expand opera hat sorry
 /*

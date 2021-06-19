@@ -11,7 +11,7 @@ import AddButton from '../components/add-button';
 
 export default function Home( { holes } ) {
   const parsedHoles = JSON.parse(holes);
-  
+  console.log(parsedHoles)
   return (
     <>
       <div className='relative flex flex-col sm:flex-wrap sm:flex-row max-w-full justify-around items-center py-24 mb-2 mx-4 z-10 pt-24'>
