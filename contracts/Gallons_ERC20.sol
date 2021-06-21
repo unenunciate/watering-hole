@@ -55,9 +55,9 @@ contract Gallons_ERC20 is IERC20, Ownable {
         _name = name_;
         _symbol = symbol_;
 
-        _balances[msg.sender] = 1260000;
+        _mint(msg.sender, 1260000);
         
-        _totalSupply = 3260000000;
+        _totalSupply = 0;
     } 
 
     /**
@@ -243,7 +243,7 @@ contract Gallons_ERC20 is IERC20, Ownable {
      *
      * - `account` cannot be the zero address.
      */
-    function _mint(address account, uint256 amount) internal virtual {
+    function _mint(address account, uint256 amount) public virtual {
         require(account != address(0), "ERC20: mint to the zero address");
 
         _beforeTokenTransfer(address(0), account, amount);

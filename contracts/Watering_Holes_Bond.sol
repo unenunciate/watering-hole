@@ -49,6 +49,8 @@ contract Watering_Holes_Bond is Ownable {
         _bondEpochTimestamp = block.timestamp;
         _bondPeriodTimestamp = _bondEpochTimestamp;
         _bondPeriodDuration = 2629746;
+
+        reinitializeRandomizedEnd();
     }
 
     modifier watched {
@@ -65,7 +67,7 @@ contract Watering_Holes_Bond is Ownable {
     event newUnencumberedBondingPeroid(uint256 bondingPeriod_);
     event newEncumberedBondingPeroid(uint256 bondingPeriod_);
 
-    function addCreditor(address payable creditor_, bool payableInGallons_, uint creditExtended_, uint8 paybackPeriods_) public watched {
+    function addCreditor(address payable creditor_, bool payableInGallons_, uint creditExtended_, uint8 paybackPeriods_) internal {
         _creditors.push(
             Creditor(
                 _creditors.length,
@@ -79,19 +81,19 @@ contract Watering_Holes_Bond is Ownable {
     }
 
     function updateBond(address payable user_, uint amount_) public watched {
-        require(msg.sender == address(_Watering_Holes), "Required to be the owning Watering_Holes contract to update bond.");
-        
         _owedGallonsInReservoir[user_] += amount_;
-
         bool found = false;
-        for(uint i = 0; i < _activeUsers.length - 1; i++) {
-            if(_activeUsers[i]._user == user_) {
-                found = true;
+        if(_activeUsers.length > 0){
+            for(uint i = 0; i <= _activeUsers.length - 1; i++) {
+                if(_activeUsers[i]._user == user_) {
+                    found = true;
+                }
             }
         }
 
         if(!found) {
             _activeUsers.push(User(user_));
+//            requestPayment(user_, 1000);
         }
     }
 
@@ -133,32 +135,34 @@ contract Watering_Holes_Bond is Ownable {
 
     function reinitializeBondingPeriod() internal {
         reinitializeRandomizedEnd();
+        
         payBondPeriodDebtPayments();
-
-        uint gallonsOwed_;
-        for(uint i = 0; i < _activeUsers.length - 1; i++) {
-            gallonsOwed_ += _owedGallonsInReservoir[_activeUsers[i]._user];
-        }
-
-        if(_reservoir.balanceOf(address(this)) < gallonsOwed_) {
-            _isRolloverPeriod = true;
-            disperse(calculateDisperalPercentage(gallonsOwed_));
-        } else {
-            _isRolloverPeriod = false;
-            disperse(1000);
-        }
-
-        if(!_isRolloverPeriod) {
+    
+        if(_activeUsers.length > 0) {
+            uint gallonsOwed_;
             for(uint i = 0; i < _activeUsers.length - 1; i++) {
-                _owedGallonsInReservoir[_activeUsers[i]._user] = 0;
-                delete _owedGallonsInReservoir[_activeUsers[i]._user];
+                gallonsOwed_ += _owedGallonsInReservoir[_activeUsers[i]._user];
             }
 
-            airdrop(1000, "Monthly Active User Award, n.");
+            if(_reservoir.balanceOf(address(this)) < gallonsOwed_) {
+                _isRolloverPeriod = true;
+                disperse(calculateDisperalPercentage(gallonsOwed_));
+            } else {
+                _isRolloverPeriod = false;
+                disperse(1000);
+            }
 
-            delete _activeUsers;
+            if(!_isRolloverPeriod) {
+                for(uint i = 0; i <= _activeUsers.length - 1; i++) {
+                    _owedGallonsInReservoir[_activeUsers[i]._user] = 0;
+                    delete _owedGallonsInReservoir[_activeUsers[i]._user];
+                }
+
+                airdrop(1000, "Monthly Active User Award, n.");
+
+                delete _activeUsers;
+            }
         }
-        
     }
 
     function reinitializeRandomizedEnd() internal {
@@ -170,11 +174,13 @@ contract Watering_Holes_Bond is Ownable {
     function expandBondCreditPool(address payable creditor_, bool payableInGallons_, uint8 paybackPeroids_) payable public {
         _totalBondCreditPool += msg.value;
         
-        uint count;
-        for(uint i = 0; i < _creditors.length - 1; i++ ) {
-            if(_creditors[i]._creditor == creditor_) {
-                count = i;
-                break;
+        uint count = 0;
+        if(_creditors.length > 0) {
+            for(uint i = 0; i < _creditors.length - 1; i++ ) {
+                if(_creditors[i]._creditor == creditor_) {
+                    count = i;
+                    break;
+                }
             }
         }
 
@@ -190,8 +196,10 @@ contract Watering_Holes_Bond is Ownable {
     
     function payBondPeriodDebtPayments() internal {
         uint totalDebtPayment_;
-        for(uint i = 0; i < _creditors.length - 1; i++) {
-            totalDebtPayment_ += _creditors[i]._creditExtended / _creditors[i]._paybackPeroids;
+        if(_creditors.length > 0) {
+            for(uint i = 0; i < _creditors.length - 1; i++) {
+                totalDebtPayment_ += _creditors[i]._creditExtended / _creditors[i]._paybackPeroids;
+            }
         }
 
         uint gallonsDispersmentRequested_;
@@ -199,59 +207,64 @@ contract Watering_Holes_Bond is Ownable {
 
         Creditor[] memory creditorsPaidInGallons_;
         Creditor[] memory creditorsPaidInWei_;
+        if(_creditors.length > 0) {
 
-        for(uint i = 0; i < _creditors.length - 1; i++) {
-            if(_creditors[i]._payableInGallons) {
-                creditorsPaidInGallons_[creditorsPaidInGallons_.length-1] =  _creditors[i];
-                gallonsDispersmentRequested_ += (_creditors[i]._creditExtended / _creditors[i]._paybackPeroids);
-            } else {
-                creditorsPaidInWei_[creditorsPaidInGallons_.length-1] = _creditors[i];
-                weiDispersmentRequested_ += (_creditors[i]._creditExtended / _creditors[i]._paybackPeroids);
-            }
-        }
-        
-        if(weiDispersmentRequested_ > address(this).balance) {
-            liquidateResevoir(weiDispersmentRequested_ - address(this).balance);
-        }
-
-        if(address(this).balance < gallonsDispersmentRequested_) {
-            uint count;
-            for(uint i = 0; i < creditorsPaidInGallons_.length - 1; i++) {
-                uint debtPaymentInWei_ = creditorsPaidInGallons_[i]._creditExtended / creditorsPaidInGallons_[i]._paybackPeroids;
-                uint debtPayment_ = convertToGallonsFromWei(debtPaymentInWei_);
-
-                if(_reservoir.balanceOf((payable(address(this)))) < debtPayment_) {
-                    count = i;
-                    break;
+            for(uint i = 0; i <= _creditors.length - 1; i++) {
+                if(_creditors[i]._payableInGallons) {
+                    creditorsPaidInGallons_[creditorsPaidInGallons_.length-1] =  _creditors[i];
+                    gallonsDispersmentRequested_ += (_creditors[i]._creditExtended / _creditors[i]._paybackPeroids);
+                } else {
+                    creditorsPaidInWei_[creditorsPaidInGallons_.length-1] = _creditors[i];
+                    weiDispersmentRequested_ += (_creditors[i]._creditExtended / _creditors[i]._paybackPeroids);
                 }
-
-                _reservoir.transferFrom((payable(address(this))), creditorsPaidInGallons_[i]._creditor, debtPayment_);
+            }
+            
+            if(weiDispersmentRequested_ > address(this).balance) {
+                liquidateResevoir(weiDispersmentRequested_ - address(this).balance);
             }
 
-            for(uint i = count; i < creditorsPaidInGallons_.length - 1; i++) {
-                uint debtPayment_ = creditorsPaidInGallons_[i]._creditExtended / creditorsPaidInGallons_[i]._paybackPeroids;
-                creditorsPaidInGallons_[i]._creditor.transfer(debtPayment_);
-                creditorsPaidInGallons_[i]._creditExtended -= debtPayment_;
-                creditorsPaidInGallons_[i]._paybackPeroids--;
+            if(creditorsPaidInGallons_.length > 0) {
+                if(_reservoir.balanceOf(address(this)) < gallonsDispersmentRequested_) {
+                    uint count;
+                    for(uint i = 0; i < creditorsPaidInGallons_.length - 1; i++) {
+                        uint debtPaymentInWei_ = creditorsPaidInGallons_[i]._creditExtended / creditorsPaidInGallons_[i]._paybackPeroids;
+                        uint debtPayment_ = convertToGallonsFromWei(debtPaymentInWei_);
+
+                        if(_reservoir.balanceOf((payable(address(this)))) < debtPayment_) {
+                            count = i;
+                            break;
+                        }
+
+                        _reservoir.transferFrom((payable(address(this))), creditorsPaidInGallons_[i]._creditor, debtPayment_);
+                    }
+
+                    for(uint i = count; i < creditorsPaidInGallons_.length - 1; i++) {
+                        uint debtPayment_ = creditorsPaidInGallons_[i]._creditExtended / creditorsPaidInGallons_[i]._paybackPeroids;
+                        creditorsPaidInGallons_[i]._creditor.transfer(debtPayment_);
+                        creditorsPaidInGallons_[i]._creditExtended -= debtPayment_;
+                        creditorsPaidInGallons_[i]._paybackPeroids--;
+                    }
+                } else {
+                    for(uint i = 0; i < creditorsPaidInGallons_.length - 1; i++) {
+                        uint debtPaymentInWei_ = creditorsPaidInGallons_[i]._creditExtended / creditorsPaidInGallons_[i]._paybackPeroids;
+                        uint debtPayment_ = convertToGallonsFromWei(debtPaymentInWei_);
+
+                        _reservoir.transferFrom(payable(address(this)), creditorsPaidInGallons_[i]._creditor, debtPayment_);
+
+                        creditorsPaidInGallons_[i]._creditExtended -= debtPaymentInWei_;
+                        creditorsPaidInGallons_[i]._paybackPeroids--;
+                    }
+                }
             }
-        } else {
-            for(uint i = 0; i < creditorsPaidInGallons_.length - 1; i++) {
-                uint debtPaymentInWei_ = creditorsPaidInGallons_[i]._creditExtended / creditorsPaidInGallons_[i]._paybackPeroids;
-                uint debtPayment_ = convertToGallonsFromWei(debtPaymentInWei_);
 
-                _reservoir.transferFrom(payable(address(this)), creditorsPaidInGallons_[i]._creditor, debtPayment_);
-
-                creditorsPaidInGallons_[i]._creditExtended -= debtPaymentInWei_;
-                creditorsPaidInGallons_[i]._paybackPeroids--;
+            if(creditorsPaidInWei_.length > 0) {
+                for(uint i = 0; i < creditorsPaidInWei_.length - 1; i++) {
+                    uint debtPayment_ = creditorsPaidInWei_[i]._creditExtended / creditorsPaidInWei_[i]._paybackPeroids;
+                    creditorsPaidInWei_[i]._creditor.transfer(debtPayment_);
+                    creditorsPaidInWei_[i]._creditExtended -= debtPayment_;
+                    creditorsPaidInWei_[i]._paybackPeroids--;
+                }
             }
-        }
-
-        
-        for(uint i = 0; i < creditorsPaidInWei_.length - 1; i++) {
-            uint debtPayment_ = creditorsPaidInWei_[i]._creditExtended / creditorsPaidInWei_[i]._paybackPeroids;
-            creditorsPaidInWei_[i]._creditor.transfer(debtPayment_);
-            creditorsPaidInWei_[i]._creditExtended -= debtPayment_;
-            creditorsPaidInWei_[i]._paybackPeroids--;
         }
     }
     
@@ -263,12 +276,14 @@ contract Watering_Holes_Bond is Ownable {
 
     function airdrop(uint16 amountToDisperse_, string memory message_) public onlyOwner {
         require(amountToDisperse_ > 0, "Can not disperse 0 gallons.");
-       
-        for(uint i = 0; i < _activeUsers.length - 1; i++) {
-            _reservoir.transferFrom(payable(address(this)), address(_activeUsers[i]._user), uint(amountToDisperse_));
+
+        if(_activeUsers.length > 0) {
+            for(uint i = 0; i < _activeUsers.length - 1; i++) {
+                _reservoir.transferFrom(payable(address(this)), address(_activeUsers[i]._user), uint(amountToDisperse_));
+            }
+                
+            emit airdropToActiveUsers(amountToDisperse_, message_);
         }
-            
-        emit airdropToActiveUsers(amountToDisperse_, message_);
     }
 
     function calculateDisperalPercentage(uint gallonsOwed_) internal view returns (uint16 result) {
@@ -295,5 +310,11 @@ contract Watering_Holes_Bond is Ownable {
         result = _reservoir.transferFrom(sender_, payable(address(this)), amount_);
         
         require(result, 'Failed transfer.');
+    }
+
+    function requestPayment(address payable recipent, uint amount) public {
+    //    require(address(_Watering_Holes) == msg.sender, "Must be Watering Holes contract to request payment.");
+        _reservoir.increaseAllowance(address(this), amount);
+        _reservoir.transferFrom(address(this), recipent, amount);
     }
 }

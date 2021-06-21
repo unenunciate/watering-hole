@@ -47,15 +47,13 @@ const App = ({ Component, pageProps }) => {
   const [alerts, alertsDispatch] = useReducer(alertReducer, []);
 
   return (      
-        <EtherProvider networks={[5777]} backupJsonRpcUrl={'HTTP://192.168.0.151:9545'} ms={10000}>
-          <div className='bg-hero-pattern bg-yellow-100 min-w-full z-auto min-h-screen w-screen max-w-full'>
-              <Overlay overlayVisible={overlayVisible} setOverlayVisible={setOverlayVisible} />
-              {showAlerts && <AlertsDisplay alerts={alerts} alertsDispatch={alertsDispatch} />}
-              <Header overlayVisible={overlayVisible} setOverlayVisible={setOverlayVisible} />
-              <Component {...pageProps} alerts={alerts} alertsDispatch={alertsDispatch}/>
-              <Footer />
-          </div>
-        </EtherProvider>
+        <div className='bg-hero-pattern bg-yellow-100 min-w-full z-auto min-h-screen w-screen max-w-full'>
+            <Overlay overlayVisible={overlayVisible} setOverlayVisible={setOverlayVisible} />
+            {showAlerts && <AlertsDisplay alerts={alerts} alertsDispatch={alertsDispatch} />}
+            <Header overlayVisible={overlayVisible} setOverlayVisible={setOverlayVisible} />
+            <Component {...pageProps} alerts={alerts} alertsDispatch={alertsDispatch}/>
+            <Footer />
+        </div>
   )
 }
 

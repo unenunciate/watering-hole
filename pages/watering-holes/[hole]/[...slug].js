@@ -36,16 +36,10 @@ export default function Post( { wID, post, user, comments, alerts, alertsDispatc
     const [WateringHoleBond, setWateringHoleBond] = useState(null);
     const [GallonsERC20, setGallonsERC20] = useState(null);
 
-    const etherProvider = useEtherProvider();
-    const myAddress = useAccount(etherProvider);
-
     useEffect(async () => { 
-        console.log(ethers.getDefaultProvider());
-        if (EtherProvider) {
-            setWateringHole(new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI, ethers.getDefaultProvider()));
-            setWateringHoleBond(new ethers.Contract( WATERING_HOLES_BOND_ADDRESS , WATERING_HOLES_BOND_ABI, ethers.getDefaultProvider()));
-            setGallonsERC20(new ethers.Contract( GALLONS_ERC20_ADDRESS , GALLONS_ERC20_ABI, ethers.getDefaultProvider()));
-        }
+        setWateringHole(new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI, ethers.getDefaultProvider()));
+        setWateringHoleBond(new ethers.Contract( WATERING_HOLES_BOND_ADDRESS , WATERING_HOLES_BOND_ABI, ethers.getDefaultProvider()));
+        setGallonsERC20(new ethers.Contract( GALLONS_ERC20_ADDRESS , GALLONS_ERC20_ABI, ethers.getDefaultProvider()));
     }, [])
 
     useEffect(async () => { 

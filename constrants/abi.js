@@ -175,48 +175,6 @@ export const WATERING_HOLES_ABI =[
 				"internalType": "uint256",
 				"name": "_numberOfPosts",
 				"type": "uint256"
-			},
-			{
-				"components": [
-					{
-						"internalType": "uint256",
-						"name": "_id",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address payable",
-						"name": "_poster",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "_content",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "_date",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_timestamp",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_numberOfCommentsInPost",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_numberOfGallonsSupported",
-						"type": "uint256"
-					}
-				],
-				"internalType": "struct Watering_Holes.Post",
-				"name": "_lastestPost",
-				"type": "tuple"
 			}
 		],
 		"stateMutability": "view",
@@ -554,48 +512,6 @@ export const WATERING_HOLES_ABI =[
 						"internalType": "uint256",
 						"name": "_numberOfPosts",
 						"type": "uint256"
-					},
-					{
-						"components": [
-							{
-								"internalType": "uint256",
-								"name": "_id",
-								"type": "uint256"
-							},
-							{
-								"internalType": "address payable",
-								"name": "_poster",
-								"type": "address"
-							},
-							{
-								"internalType": "string",
-								"name": "_content",
-								"type": "string"
-							},
-							{
-								"internalType": "string",
-								"name": "_date",
-								"type": "string"
-							},
-							{
-								"internalType": "uint256",
-								"name": "_timestamp",
-								"type": "uint256"
-							},
-							{
-								"internalType": "uint256",
-								"name": "_numberOfCommentsInPost",
-								"type": "uint256"
-							},
-							{
-								"internalType": "uint256",
-								"name": "_numberOfGallonsSupported",
-								"type": "uint256"
-							}
-						],
-						"internalType": "struct Watering_Holes.Post",
-						"name": "_lastestPost",
-						"type": "tuple"
 					}
 				],
 				"internalType": "struct Watering_Holes.User",

@@ -54,7 +54,6 @@ contract Watering_Holes {
         uint256 _numberOfGallonsSupported;
         string _topic;
         uint256 _numberOfPosts;
-        Post _lastestPost;
     }
 
     /*
@@ -154,18 +153,10 @@ contract Watering_Holes {
             profilePhotoURL_,
             0,
             topic_,
-            0,
-            Post(
-                0,
-                _zeroAddress,
-                '',
-                '',
-                0,
-                0,
-                0
-            ));
+            0
+            );
 
-        _Watering_Holes_Bond.updateBond(payable(address(msg.sender)), 0);
+        _Watering_Holes_Bond.updateBond(payable(msg.sender), 0);
     }
     
     function getWateringHole(uint256 wateringHoleID_) public view returns (WateringHole memory wateringHole_) {

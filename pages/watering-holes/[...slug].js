@@ -1,18 +1,10 @@
-import { useEffect, useState } from 'react';
-
 import { WATERING_HOLES_ADDRESS } from '../../constrants/index';
 import { WATERING_HOLES_ABI } from '../../constrants/abi';
 
-import {EtherProvider, useEtherProvider, useAccount} from 'use-ether-provider';
 import { ethers } from 'ethers';
-
 
 import Card from '../../components/card';
 import AddButton from '../../components/add-button';
-
-import VoteDisplayPost from '../../components/vote-display-post';
-
-import Link from 'next/link';
 
 export default function WateringHole( { pageContent, whData, alertsDispatch } )  {
     const content = JSON.parse(pageContent);
