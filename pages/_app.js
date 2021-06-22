@@ -2,19 +2,11 @@ import '../styles/globals.css';
 
 import Head from 'next/head';
 
-import { useEffect, useState, useReducer } from 'react';
-
-import { WATERING_HOLES_ADDRESS } from '../constrants/index';
-import { WATERING_HOLES_ABI } from '../constrants/abi';
+import { useState, useReducer } from 'react';
 
 import Header from '../components/header';
 import Footer from '../components/footer';
 import Overlay from '../components/overlay';
-
-import {EtherProvider, useEtherProvider, useAccount} from 'use-ether-provider';
-import {ethers} from 'ethers';
-
-import EthersContext from '../contexts/ethers';
 
 import AlertsDisplay from '../components/alerts-display'
 
