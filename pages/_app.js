@@ -17,7 +17,7 @@ const App = ({ Component, pageProps }) => {
     switch (action.type) {
       case 'addAlert':
         setShowAlerts(true);
-        return [{ message: 'The changes given will be displayed after the transaction processes and a page refersh.', timeout: 10000 }];
+        return [{ message: 'The changes given will be displayed after the transaction processes and a page refresh.', timeout: 10000 }];
       case 'removeAlert':
         let temp;
         if(state.length <= 1) {

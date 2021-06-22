@@ -21,33 +21,21 @@ import VoteDisplayPost from '../../../components/vote-display-post';
 
 import Link from 'next/link';
 
-export default function Post( { wID, post, user, comments, alerts, alertsDispatch } )  {
+export default function Post( { post, user, comments, alerts, alertsDispatch, whData } )  {
     const parsedPost = JSON.parse(post);
     const parsedUser = JSON.parse(user);
+    const parsedWhData = JSON.parse(whData);
 
-    const [whData, setWhData] = useState({});
+//    const [whData, setWhData] = useState({});
 
     const parsedGals = parseInt(parsedPost[6].hex, 16);
 
     const userLink = `/user/${parsedUser[0]}`;
-    const holeLink = `/watering-holes/${wID}`;
+    const holeLink = `/watering-holes/${parseInt(parsedWhData[0].hex, 16)}`;
 
     const [WateringHole, setWateringHole] = useState(null);
     const [WateringHoleBond, setWateringHoleBond] = useState(null);
     const [GallonsERC20, setGallonsERC20] = useState(null);
-
-    useEffect(async () => { 
-        setWateringHole(new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI, ethers.getDefaultProvider()));
-        setWateringHoleBond(new ethers.Contract( WATERING_HOLES_BOND_ADDRESS , WATERING_HOLES_BOND_ABI, ethers.getDefaultProvider()));
-        setGallonsERC20(new ethers.Contract( GALLONS_ERC20_ADDRESS , GALLONS_ERC20_ABI, ethers.getDefaultProvider()));
-    }, [])
-
-    useEffect(async () => { 
-        console.log("effect 2", wID)
-        if (WateringHole) {
-            setWhData(await WateringHole.getWateringHole(1));
-        }
-    }, [WateringHole])
 
     console.log("top level", WateringHole)
 
@@ -61,7 +49,7 @@ export default function Post( { wID, post, user, comments, alerts, alertsDispatc
                 <div className='flex relative justify-center'>
                     <Link href={holeLink}>
                         <div className='cursor-pointer fixed z-30 top-24 w-2/3 px-6 py-4 flex justify-center bg-yellow-400 opacity-75 border-2 rounded-xl border-yellow-50 text-yellow-50'>
-                            <h1 className='flex'>{whData[3]}: {whData[1]}</h1>
+                            <h1 className='flex'>{parsedWhData[3]} : {parsedWhData[1]}</h1>
                         </div>
                     </Link>
                     <div className='w-2/3 bg-yellow-400 rounded-lg shadow-2xl border-blue-600 border-2 flex flex-col items-center mt-20'>
@@ -94,7 +82,7 @@ export default function Post( { wID, post, user, comments, alerts, alertsDispatc
                                 {parsedGals}<span> </span>Gals
                             </div>
                         </div>
-                        <VoteDisplayPost isVisible={voteVisible} setIsVisible={setVoteVisible} data={{post: parsedPost, user: parsedUser}} wID={wID} alerts={alerts} alertsDispatch={alertsDispatch} />
+                        <VoteDisplayPost isVisible={voteVisible} setIsVisible={setVoteVisible} data={{post: parsedPost, user: parsedUser}} wID={parseInt(parsedWhData[0].hex, 16)} alerts={alerts} alertsDispatch={alertsDispatch} />
                     </div>
                 </div>
                 <div className='flex flex-col justify-around'>
@@ -110,7 +98,7 @@ export default function Post( { wID, post, user, comments, alerts, alertsDispatc
 
             <div className='fixed z-40 right-1 bottom-20'>
                 <div className='text-yellow-400'>
-                    <AddButton type={0} wID={wID} pID={parseInt(parsedPost[0].hex, 16)} />
+                    <AddButton type={0} wID={parseInt(parsedWhData[0].hex, 16)} pID={parseInt(parsedPost[0].hex, 16)} />
                 </div>
             </div>
         </>
@@ -125,6 +113,7 @@ export async function getServerSideProps ( { query } ) {
     
     const post = await WateringHoles.getPost(parseInt(hole, 10), parseInt(slug[0], 10)); 
     const user = await WateringHoles.getUser(post._poster);
+    const whData = await WateringHoles.getWateringHole(parseInt(hole, 10));
 
     const numberOfCommentsInPost = parseInt(post._numberOfCommentsInPost); 
     let comments = [];
@@ -135,7 +124,9 @@ export async function getServerSideProps ( { query } ) {
         comments.push({ post: commentPost, user: commentUser });
     }
 
+    console.log('SSR',JSON.stringify(whData));
+
     return {
-      props: { wID: parseInt(hole, 10), post: JSON.stringify(post), user: JSON.stringify(user), comments: JSON.stringify(comments) },
+      props: { wID: parseInt(hole, 10), post: JSON.stringify(post), user: JSON.stringify(user), comments: JSON.stringify(comments), whData: JSON.stringify(whData) },
     } 
 }
