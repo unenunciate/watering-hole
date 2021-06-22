@@ -48,7 +48,7 @@ export default function Post( { post, user, comments, alerts, alertsDispatch, wh
             <div className='py-24 flex flex-col'>
                 <div className='flex relative justify-center'>
                     <Link href={holeLink}>
-                        <div className='cursor-pointer fixed z-30 top-24 w-2/3 px-6 py-4 flex justify-center bg-yellow-400 opacity-75 border-2 rounded-xl border-yellow-50 text-yellow-50'>
+                        <div className='cursor-pointer fixed z-30 top-24 w-2/3 px-6 py-4 flex justify-center bg-yellow-400 opacity-75 border-2 rounded-xl border-yellow-600 text-yellow-600'>
                             <h1 className='flex'>{parsedWhData[3]} : {parsedWhData[1]}</h1>
                         </div>
                     </Link>

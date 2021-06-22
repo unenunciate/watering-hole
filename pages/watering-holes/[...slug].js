@@ -13,7 +13,7 @@ export default function WateringHole( { pageContent, whData, alertsDispatch } ) 
     return (
         <>
             <div className='relative flex flex-col sm:flex-wrap sm:flex-row max-w-full justify-around items-center py-24 mb-2 mx-4 z-10'>
-                <div className='fixed z-30 top-24 w-2/3 px-6 py-4 flex justify-center bg-yellow-400 opacity-75 border-2 rounded-xl border-yellow-50 text-yellow-50'>
+                <div className='fixed z-30 top-24 w-2/3 px-6 py-4 flex justify-center bg-yellow-400 opacity-75 border-2 rounded-xl border-yellow-600 text-yellow-600'>
                     <h1 className='flex'>{wateringHoleData[3]} : {wateringHoleData[1]}</h1>
                 </div>
 
