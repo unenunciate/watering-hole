@@ -119,7 +119,7 @@ export default function Post( { wID, post, user, comments, alerts, alertsDispatc
 
 
 export async function getServerSideProps ( { query } ) {
-    const serverProvider = new ethers.providers.JsonRpcProvider('HTTP://192.168.0.151:9545');
+    const serverProvider = new ethers.providers.JsonRpcProvider('HTTP://127.0.0.1:9545');
     const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , serverProvider);
     const { hole, slug } = query;
     
