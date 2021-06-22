@@ -6,7 +6,7 @@ import { ethers } from 'ethers';
 import Card from '../../components/card';
 import AddButton from '../../components/add-button';
 
-export default function WateringHole( { pageContent, whData, alertsDispatch } )  {
+export default function WateringHole( { pageContent, whData } )  {
     const content = JSON.parse(pageContent);
     const wateringHoleData = JSON.parse(whData);
 
