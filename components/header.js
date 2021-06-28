@@ -1,19 +1,42 @@
 import Link from 'next/link';
 
-import EthersContext from '../contexts/ethers'
+import { WATERING_HOLES_ABI } from '../constrants/abi';
+import { WATERING_HOLES_ADDRESS } from '../constrants/index';
 
-import {useState, useEffect, useContext} from 'react';
+import { useState, useEffect } from 'react';
+
+import { ethers } from 'ethers';
+
+
 
 /*    <input autoComplete='off' 
         onChange={event => setLoggedIn(event.target.value) }></input>
         */
 
 const Header = ({ overlayVisible, setOverlayVisible }) => {
-    const [loggedIn, setLoggedIn] = useState(false);
-    const legacyEthersContext = useContext(EthersContext);
+    const [registered, setRegistered] = useState(false);
     
-    
-    useEffect(() => { legacyEthersContext || window.ethereum ? setLoggedIn(true) : setLoggedIn(false); }, [legacyEthersContext]);
+    const [WateringHole, setWateringHole] = useState(false);
+
+    useEffect(() => { 
+        if(window.ethereum) {
+            window.ethereum.enable();
+            setWateringHole(new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , (new ethers.providers.Web3Provider(window.ethereum)).getSigner()));
+        }
+     }, []);
+     
+    useEffect(async () => { 
+        if(WateringHole) {
+            let accounts = await (new ethers.providers.Web3Provider(window.ethereum)).listAccounts();
+
+            const account = accounts[0];    
+            const user = await WateringHole.getUser(account);
+
+            if(user[2] != '') {
+                setRegistered(true);
+            }
+        }
+    }, [WateringHole]);
     
     return (
         <div className='fixed top-0 flex flex-row min-w-full justify-between bg-blue-600 p-6 z-50 border-b-2 border-yellow-400 mb-24 shadow-2xl'>
@@ -21,10 +44,10 @@ const Header = ({ overlayVisible, setOverlayVisible }) => {
                 <h1 className='hover:text-yellow-100 ml-4 font-holocene text-2xl text-yellow-400 cursor-pointer'>Watering Hole</h1>
             </Link>
             {   
-                !loggedIn ? 
-                <div>
-                    <button onClick={() => setOverlayVisible(!overlayVisible)} className='shadow-2xl pl-1 flex flex-row rounded cursor-pointer hover:bg-yellow-100 active:bg-yellow-200 bg-yellow-400 mt-1 mr-4'>
-                        <svg xmlns='http://www.w3.org/2000/svg' className='h-6 w-6 text-blue-600' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                !registered ? 
+                <div className='mt-2 courser-pointer'>
+                    <button onClick={() => setOverlayVisible(!overlayVisible)} className='text-blue-600 font-holocene shadow-2xl pl-1 flex flex-row rounded cursor-pointer hover:bg-yellow-100 active:bg-yellow-200 bg-yellow-400 mt-1 mr-4'>
+                        Register <span> </span> <svg xmlns='http://www.w3.org/2000/svg' className='h-6 w-6 text-blue-600' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                             <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1' />
                         </svg>
                     </button>

@@ -31,8 +31,8 @@ const WateringHoleCard = ({ hole }) => {
                         </div>
                     </Link>
                     
-                    <div className='rounded py-2 w-48 h-6 truncate text-yellow-400 mt-1 bg-blue-400 px-2 font-holocene cursor-pointer'>
-                            <p className='-mt-2'> </p>
+                    <div className='rounded py-2 w-48 h-6 truncate text-yellow-400 mt-1 bg-blue-400 px-2 font-holocene'>
+                            <p className='-mt-2'> {hole[3]} </p>
                     </div>
                 </div>
                 <Link href={holeLink}>

@@ -6,9 +6,12 @@ import { ethers } from 'ethers';
 import Card from '../../components/card';
 import AddButton from '../../components/add-button';
 
-export default function WateringHole( { pageContent, whData } )  {
+export default function WateringHole( {  alertsDispatch, pageContent, whData } )  {
     const content = JSON.parse(pageContent);
     const wateringHoleData = JSON.parse(whData);
+
+    console.log(alertsDispatch)
+
 
     return (
         <>
@@ -28,7 +31,7 @@ export default function WateringHole( { pageContent, whData } )  {
 
             <div className='fixed z-40 right-1 bottom-20'>
                 <div className='text-yellow-400'>
-                    <AddButton type={1} wID={parseInt(wateringHoleData[0].hex, 16)}/>
+                    <AddButton type={2} wID={parseInt(wateringHoleData[0].hex, 16)} alertsDispatch={alertsDispatch} />
                 </div>
             </div>
         </>

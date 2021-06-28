@@ -37,7 +37,7 @@ const Comment = ({ data, postID, alerts, alertsDispatch }) => {
                         </svg>
                     </button>
                     <div className='font-holocene'>
-                        {parsedGals}<span> </span>Gals
+                        {parsedGals/100}<span> </span>Gals
                     </div>
                 </div>
                 <VoteDisplayComment isVisible={voteVisible} setIsVisible={setVoteVisible} data={data} postID={postID} alerts={alerts} alertsDispatch={alertsDispatch} />

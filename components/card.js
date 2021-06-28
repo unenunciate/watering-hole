@@ -54,7 +54,7 @@ const Card = ({ wID, data }) => {
                     </div>
                     
                     <div className='ml-2 my-2'>
-                        <p className='-mt-2 text-blue-50'>{postGals} gals</p>
+                        <p className='-mt-2 text-blue-50'>{postGals/100} gals</p>
                     </div>
                 </div>
             </div>

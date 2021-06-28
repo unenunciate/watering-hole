@@ -79,7 +79,7 @@ export default function Post( { post, user, comments, alerts, alertsDispatch, wh
                                 </svg>
                             </button>
                             <div className='font-holocene'>
-                                {parsedGals}<span> </span>Gals
+                                {parsedGals/100}<span> </span>Gals
                             </div>
                         </div>
                         <VoteDisplayPost isVisible={voteVisible} setIsVisible={setVoteVisible} data={{post: parsedPost, user: parsedUser}} wID={parseInt(parsedWhData[0].hex, 16)} alerts={alerts} alertsDispatch={alertsDispatch} />
@@ -98,7 +98,7 @@ export default function Post( { post, user, comments, alerts, alertsDispatch, wh
 
             <div className='fixed z-40 right-1 bottom-20'>
                 <div className='text-yellow-400'>
-                    <AddButton type={0} wID={parseInt(parsedWhData[0].hex, 16)} pID={parseInt(parsedPost[0].hex, 16)} />
+                    <AddButton type={3} wID={parseInt(parsedWhData[0].hex, 16)} pID={parseInt(parsedPost[0].hex, 16)} alertsDispatch={alertsDispatch} />
                 </div>
             </div>
         </>
@@ -110,6 +110,8 @@ export async function getServerSideProps ( { query } ) {
     const serverProvider = new ethers.providers.JsonRpcProvider('HTTP://127.0.0.1:9545');
     const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , serverProvider);
     const { hole, slug } = query;
+
+    console.log(slug)
     
     const post = await WateringHoles.getPost(parseInt(hole, 10), parseInt(slug[0], 10)); 
     const user = await WateringHoles.getUser(post._poster);
@@ -119,12 +121,10 @@ export async function getServerSideProps ( { query } ) {
     let comments = [];
 
     for(let i = 1; i <= numberOfCommentsInPost; i++ ) {
-        const commentPost = await WateringHoles.getComment(parseInt(hole, 10), i);
+        const commentPost = await WateringHoles.getComment(post[0], i);
         const commentUser = await WateringHoles.getUser(commentPost._poster);
         comments.push({ post: commentPost, user: commentUser });
     }
-
-    console.log('SSR',JSON.stringify(whData));
 
     return {
       props: { wID: parseInt(hole, 10), post: JSON.stringify(post), user: JSON.stringify(user), comments: JSON.stringify(comments), whData: JSON.stringify(whData) },

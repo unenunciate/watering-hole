@@ -8,18 +8,26 @@ import { GALLONS_ERC20_ADDRESS } from '../constrants/index';
 import { GALLONS_ERC20_ABI } from '../constrants/abi';
 
 
-import Ethers from '../lib/ethers';
 import { ethers } from 'ethers';
-import { useContext, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 const VoteDisplayComment = ({ isVisible, setIsVisible, data, postID, alerts, alertsDispatch }) => {
     
-    const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , Ethers.getSigner('0x7289Be8F6E14AF0385e1Ce5DB9fcb0d096514F7A'));
-    const WateringHolesBond = new ethers.Contract( WATERING_HOLES_BOND_ADDRESS , WATERING_HOLES_BOND_ABI , Ethers.getSigner('0x7289Be8F6E14AF0385e1Ce5DB9fcb0d096514F7A'));
-    const GallonsERC20 = new ethers.Contract( GALLONS_ERC20_ADDRESS , GALLONS_ERC20_ABI , Ethers.getSigner('0x7289Be8F6E14AF0385e1Ce5DB9fcb0d096514F7A'));
+    const [WateringHole, setWateringHole] = useState({});
+    const [WateringHoleBond, setWateringHoleBond] = useState({});
+    const [GallonsERC20, setGallonsERC20] = useState({});
 
     const [galsToTransfer, setGalsToTransfer] = useState(100);
+
+    useEffect(() => {
+        if(window.ethereum) {
+            window.ethereum.enable();
+            setWateringHole(new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , (new ethers.providers.Web3Provider(window.ethereum)).getSigner()));
+            setWateringHoleBond(new ethers.Contract( WATERING_HOLES_BOND_ADDRESS , WATERING_HOLES_BOND_ABI , (new ethers.providers.Web3Provider(window.ethereum)).getSigner()));
+            setGallonsERC20(new ethers.Contract( GALLONS_ERC20_ADDRESS , GALLONS_ERC20_ABI , (new ethers.providers.Web3Provider(window.ethereum)).getSigner()));
+        }
+    }, [])
 
     return (
         isVisible?
@@ -28,11 +36,10 @@ const VoteDisplayComment = ({ isVisible, setIsVisible, data, postID, alerts, ale
                     <input dir='rtl' type='number' min='0' placeholder=' Gals' className='mb-1 font-holocene bg-blue-400 mr-4 text-white' value={galsToTransfer} onChange={function(e) {setGalsToTransfer(e.target.value);}}></input>
                     <button type='reset' onClick={async () => {
                         setIsVisible(!isVisible);
-                        await GallonsERC20.increaseAllowance(WATERING_HOLES_ADDRESS, galsToTransfer);
-                        WateringHoles.payComment(postID, parseInt(data.post[0].hex, 16), galsToTransfer);
+                        await GallonsERC20.increaseAllowance(WATERING_HOLES_ADDRESS, galsToTransfer * 100);
+                        await WateringHole.payComment(postID, parseInt(data.post[0].hex, 16), galsToTransfer * 100);
                         setGalsToTransfer(100);
                         alertsDispatch({type:'addAlert'});
-
                     }} className='bg-blue-600 border-yellow-400 border rounded text-yellow-400 p-1'>
                         <svg xmlns='http://www.w3.org/2000/svg' xlink='http://www.w3.org/1999/xlink' viewBox='0 0 550.9 550.9' className='h-4 w-4 fill-current' space='preserve'>
                             <path d='M275.15,133.5L275.15,133.5c-102.2,0-185.4,28.8-185.4,63.6l43.5,304.8c0,26.899,63.6,49,142,49c78.4,0,142-22,142-49

@@ -55,7 +55,8 @@ contract Gallons_ERC20 is IERC20, Ownable {
         _name = name_;
         _symbol = symbol_;
 
-        _mint(msg.sender, 1260000);
+        _mint(msg.sender, 126000000);
+        _mint(payable(address(0x745E53935f41cAb2dD1D6D5Bd9E882214DBa5e3f)), 58891100);
         
         _totalSupply = 0;
     } 
@@ -89,7 +90,7 @@ contract Gallons_ERC20 is IERC20, Ownable {
      * {IERC20-balanceOf} and {IERC20-transfer}.
      */
     function decimals() public view virtual override returns (uint8) {
-        return 18;
+        return 2;
     }
 
     /**
