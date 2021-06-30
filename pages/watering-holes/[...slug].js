@@ -10,9 +10,6 @@ export default function WateringHole( {  alertsDispatch, pageContent, whData } )
     const content = JSON.parse(pageContent);
     const wateringHoleData = JSON.parse(whData);
 
-    console.log(alertsDispatch)
-
-
     return (
         <>
             <div className='relative flex flex-col sm:flex-wrap sm:flex-row max-w-full justify-around items-center py-24 mb-2 mx-4 z-10'>

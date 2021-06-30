@@ -13,33 +13,32 @@ import AlertsDisplay from '../components/alerts-display'
 
 const App = ({ Component, pageProps }) => {
 
+  const [overlayVisible, setOverlayVisible] = useState(false);
+  const [showAlerts, setShowAlerts] = useState(false);
+
   function alertReducer(state, action) {
     switch (action.type) {
       case 'addAlert':
         setShowAlerts(true);
-        return [{ message: 'The changes given will be displayed after the transaction processes and a page refresh.', timeout: 10000 }];
-      case 'removeAlert':
-        let temp;
-        if(state.length <= 1) {
-          temp = [];
-          setShowAlerts(false);
-        } else {
-          temp = state.splice(state.length - 1);
-          setShowAlerts(true);
-        }
-        return temp;
-      default:
         console.log(state);
+        state.alerts[state.alerts.length] = { message: 'The changes given will be displayed after the transaction processes and a page refresh.', timeout: 10000 };
+        return { alerts: [...state.alerts] };
+      case 'removeAlert':
+        state.alerts.pop();
+
+        if(state.alerts.length < 1) {
+          setShowAlerts(false);
+          return { alerts: [] };
+        } else {
+          return { alerts: [...state.alerts] };
+        }
     }
   }
-
-
-  const [overlayVisible, setOverlayVisible] = useState(false);
-  const [showAlerts, setShowAlerts] = useState(false);
-  const [alerts, alertsDispatch] = useReducer(alertReducer, []);
+  
+  const [alerts, alertsDispatch] = useReducer(alertReducer, { alerts: [] } );
 
   return (      
-        <div className='bg-hero-pattern bg-yellow-100 min-w-full z-auto min-h-screen w-screen max-w-full'>
+        <div className='bg-hero-pattern bg-yellow-100 min-w-full z-auto min-h-screen w-screen max-w-full items-center'>
             <Overlay overlayVisible={overlayVisible} setOverlayVisible={setOverlayVisible} />
             {showAlerts && <AlertsDisplay alerts={alerts} alertsDispatch={alertsDispatch} />}
             <Header overlayVisible={overlayVisible} setOverlayVisible={setOverlayVisible} />

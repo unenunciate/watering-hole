@@ -25,23 +25,14 @@ export default function Post( { post, user, comments, alerts, alertsDispatch, wh
     const parsedPost = JSON.parse(post);
     const parsedUser = JSON.parse(user);
     const parsedWhData = JSON.parse(whData);
-
-//    const [whData, setWhData] = useState({});
+    const parsedComments = JSON.parse(comments);
 
     const parsedGals = parseInt(parsedPost[6].hex, 16);
 
     const userLink = `/user/${parsedUser[0]}`;
     const holeLink = `/watering-holes/${parseInt(parsedWhData[0].hex, 16)}`;
 
-    const [WateringHole, setWateringHole] = useState(null);
-    const [WateringHoleBond, setWateringHoleBond] = useState(null);
-    const [GallonsERC20, setGallonsERC20] = useState(null);
-
-    console.log("top level", WateringHole)
-
     const [voteVisible, setVoteVisible] = useState(false);
-
-    const parsedComments = JSON.parse(comments);
 
     return (
         <>
@@ -89,7 +80,7 @@ export default function Post( { post, user, comments, alerts, alertsDispatch, wh
                 {
                     parsedComments.map(function( comment ) {
                         return (
-                            <Comment key={comment} data={comment} postID={parseInt(parsedPost[0].hex, 16)} alerts={alerts} alertsDispatch={alertsDispatch} />
+                            <Comment key={Math.random()} data={comment} postID={parseInt(parsedPost[0].hex, 16)} alerts={alerts} alertsDispatch={alertsDispatch} />
                         )
                     })
                 }

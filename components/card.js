@@ -5,7 +5,6 @@ import Skeleton from 'react-loading-skeleton';
 import { WATERING_HOLES_ADDRESS } from '../constrants/index';
 import { WATERING_HOLES_ABI } from '../constrants/abi';
 
-import Ethers from '../lib/ethers';
 import { ethers } from 'ethers';
 import Link from 'next/link';
 
@@ -17,10 +16,11 @@ const Card = ({ wID, data }) => {
     const [postGals, setPostGals] = useState(0);
 
     useEffect(async () => {
-        const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , Ethers );
+        await window.ethereum.enable();
+        const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , (new ethers.providers.Web3Provider(window.ethereum)));
 
         setUser(await WateringHoles.getUser(data[1]));
-        setPostGals(parseInt(data[6].hex, 16));
+        setPostGals(parseInt(data[6].hex, 16)/100);
 
         setUserLink(`/profile/${data[1]}`);
         setPostLink(`/watering-holes/${wID}/${parseInt(data[0].hex)}`);

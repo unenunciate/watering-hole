@@ -31,6 +31,8 @@ contract Watering_Holes {
         uint256 _numberOfPostsInHole;
 
         string _pictureURL;
+
+        address _founder;
     }
 
     struct Post {
@@ -77,6 +79,11 @@ contract Watering_Holes {
         _Watering_Holes_Bond = Watering_Holes_Bond(Watering_Holes_Bond_);
         _numberOfUsers  = 0;
     }
+
+    event NewPost(address indexed _by, Post _post);
+    event NewUser(address indexed _by, User _user);
+    event NewComment(address indexed _by, Post _comment);
+    event NewWateringHole(address indexed _by, WateringHole _wateringHole);
     
     function addWateringHole(string memory localGroup_, string memory majorGroup_, string memory superiorGroup_, string memory pictureURL_) public {
         for(uint i = 0; i < _numberOfWateringHoles; i++) {
@@ -92,8 +99,11 @@ contract Watering_Holes {
             superiorGroup_,
             block.timestamp,
             0,
-            pictureURL_
+            pictureURL_,
+            msg.sender
         );
+
+        emit NewWateringHole(msg.sender, _wateringHoles[_numberOfWateringHoles]);
     }
     
     function addPost(uint wateringHoleID_, string memory content_, string memory date_) public {
@@ -114,6 +124,8 @@ contract Watering_Holes {
         );
 
         _Watering_Holes_Bond.updateBond(payable(address(msg.sender)), 0);
+
+        emit NewPost(msg.sender, _posts[wateringHoleID_][numberOfPosts_]);
     }
     
     function addComment(uint wateringHoleID_, uint postID_, string memory content_, string memory date_) public {
@@ -135,6 +147,8 @@ contract Watering_Holes {
         );
         
         _Watering_Holes_Bond.updateBond(payable(address(msg.sender)), 0);
+
+        emit NewComment(msg.sender, _comments[postID_][numberOfComments_]);
     }
     
     function addUser(
@@ -157,6 +171,8 @@ contract Watering_Holes {
             );
 
         _Watering_Holes_Bond.updateBond(payable(msg.sender), 0);
+
+        emit NewUser(msg.sender, _users[payable(address(msg.sender))]);
     }
     
     function getWateringHole(uint256 wateringHoleID_) public view returns (WateringHole memory wateringHole_) {
@@ -189,6 +205,13 @@ contract Watering_Holes {
         require(_users[address(msg.sender)]._user == address(msg.sender), 'User not found, can not update.');
 
         _users[address(msg.sender)]._profilePhotoURL = profilePhotoURL_;
+    }
+
+    function updateFavoriteTopic(string calldata topic_) public {
+        require(_users[address(msg.sender)]._user != _zeroAddress, 'The zero address is not a vaild input.');
+        require(_users[address(msg.sender)]._user == address(msg.sender), 'User not found, can not update.');
+
+        _users[address(msg.sender)]._topic = topic_;
     }
     
     function payPost(uint256 wateringHoleID_, uint256 postID_, uint256 amount_) public {

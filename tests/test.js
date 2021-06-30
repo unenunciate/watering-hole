@@ -1,7 +1,7 @@
 module.exports = async function() {
     let Gal = await Gallons_ERC20.deployed();
     let accounts = await web3.eth.getAccounts();
-    Gal.increaseAllowance(accounts[0], 100000, {from: accounts[0]});
+    Gal.increaseAllowance(accounts[0], 200000, {from: accounts[0]});
     Gal.transferFrom(accounts[0], "0x745E53935f41cAb2dD1D6D5Bd9E882214DBa5e3f", 100000, {from: accounts[0]});
     Gal.balanceOf(accounts[0], {from: accounts[0]});
     Gal.balanceOf("0x745E53935f41cAb2dD1D6D5Bd9E882214DBa5e3f", {from: accounts[0]});
