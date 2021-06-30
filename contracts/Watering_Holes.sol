@@ -80,10 +80,10 @@ contract Watering_Holes {
         _numberOfUsers  = 0;
     }
 
-    event NewPost(address indexed _by, Post _post);
-    event NewUser(address indexed _by, User _user);
-    event NewComment(address indexed _by, Post _comment);
-    event NewWateringHole(address indexed _by, WateringHole _wateringHole);
+    event NewWateringHole(address indexed _by, uint _wID);
+    event NewPost(address indexed _by, uint _wID, uint _pID);
+    event NewComment(address indexed _by, uint _pID, uint _cID);
+    event NewUser(address indexed _by);
     
     function addWateringHole(string memory localGroup_, string memory majorGroup_, string memory superiorGroup_, string memory pictureURL_) public {
         for(uint i = 0; i < _numberOfWateringHoles; i++) {
@@ -103,7 +103,7 @@ contract Watering_Holes {
             msg.sender
         );
 
-        emit NewWateringHole(msg.sender, _wateringHoles[_numberOfWateringHoles]);
+        emit NewWateringHole(msg.sender, (_numberOfWateringHoles));
     }
     
     function addPost(uint wateringHoleID_, string memory content_, string memory date_) public {
@@ -125,7 +125,9 @@ contract Watering_Holes {
 
         _Watering_Holes_Bond.updateBond(payable(address(msg.sender)), 0);
 
-        emit NewPost(msg.sender, _posts[wateringHoleID_][numberOfPosts_]);
+        _users[msg.sender]._numberOfPosts++;
+
+        emit NewPost(msg.sender, wateringHoleID_, numberOfPosts_);
     }
     
     function addComment(uint wateringHoleID_, uint postID_, string memory content_, string memory date_) public {
@@ -148,7 +150,7 @@ contract Watering_Holes {
         
         _Watering_Holes_Bond.updateBond(payable(address(msg.sender)), 0);
 
-        emit NewComment(msg.sender, _comments[postID_][numberOfComments_]);
+        emit NewComment(msg.sender, (postID_), (numberOfComments_));
     }
     
     function addUser(
@@ -172,7 +174,7 @@ contract Watering_Holes {
 
         _Watering_Holes_Bond.updateBond(payable(msg.sender), 0);
 
-        emit NewUser(msg.sender, _users[payable(address(msg.sender))]);
+        emit NewUser(msg.sender);
     }
     
     function getWateringHole(uint256 wateringHoleID_) public view returns (WateringHole memory wateringHole_) {

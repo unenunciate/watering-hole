@@ -8,7 +8,7 @@ const AlertsDisplay = ({ alerts, alertsDispatch }) => {
     return (
         alerts?
             alerts.alerts?
-                <div className='flex flex-col mt-24 items-center justify-center fixed z-40'>
+                <div className='flex flex-col pt-24 items-center fixed right-1/2 left-1/2 z-50'>
                     {
                         alerts.alerts.map( function(alert) {
                             if(alert) {

@@ -20,9 +20,9 @@ const VoteDisplayPost = ({ isVisible, setIsVisible, data, wID, alerts, alertsDis
 
     const [galsToTransfer, setGalsToTransfer] = useState(100);
 
-    useEffect(() => {
+    useEffect(async () => {
         if(window.ethereum) {
-            window.ethereum.enable();
+            await window.ethereum.send('eth_requestAccounts');
             setWateringHole(new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , (new ethers.providers.Web3Provider(window.ethereum)).getSigner()));
             setWateringHoleBond(new ethers.Contract( WATERING_HOLES_BOND_ADDRESS , WATERING_HOLES_BOND_ABI , (new ethers.providers.Web3Provider(window.ethereum)).getSigner()));
             setGallonsERC20(new ethers.Contract( GALLONS_ERC20_ADDRESS , GALLONS_ERC20_ABI , (new ethers.providers.Web3Provider(window.ethereum)).getSigner()));
@@ -37,9 +37,13 @@ const VoteDisplayPost = ({ isVisible, setIsVisible, data, wID, alerts, alertsDis
                 <input dir='rtl' type='number' min='0' placeholder=' Gals' className='rounded border-yellow-600 border mb-1 font-holocene bg-yellow-400 mr-4 text-yellow-600 outline-none' value={galsToTransfer} onChange={function(e) {setGalsToTransfer(e.target.value);}}></input>
                 <button type='reset' onClick={async () => {
                     setIsVisible(!isVisible);
-                    window.ethereum.enable()
-                    await GallonsERC20.increaseAllowance(WATERING_HOLES_ADDRESS, galsToTransfer * 100);
-                    await WateringHole.payPost(wID, parseInt(data.post[0].hex, 16), galsToTransfer * 100);
+                    try {
+                        await window.ethereum.send('eth_requestAccounts');
+                        let accounts = await (new ethers.providers.Web3Provider(window.ethereum)).listAccounts();
+                        await GallonsERC20.increaseAllowance(accounts[0], galsToTransfer * 100);
+                        await GallonsERC20.increaseAllowance(WATERING_HOLES_BOND_ADDRESS, galsToTransfer * 100);
+                        await WateringHole.payPost(wID, parseInt(data.post[0].hex, 16), galsToTransfer * 100);
+                    } catch (e) {console.log(e)}
                     setGalsToTransfer(100);
                     alertsDispatch('addAlert');
                 }} className='bg-blue-600 border-blue-400 border rounded p-1'>

@@ -9,7 +9,7 @@ import { ethers } from 'ethers';
 import WateringHoleCard from '../components/watering-hole-card';
 import AddButton from '../components/add-button';
 
-export default function Home( { holes } ) {
+export default function Home( { holes, alertsDispatch } ) {
   const parsedHoles = JSON.parse(holes);
   console.log(parsedHoles)
   return (
@@ -19,7 +19,7 @@ export default function Home( { holes } ) {
             <>
               {
                 parsedHoles.map((hole) => {
-                  return <WateringHoleCard key={parsedHoles.find(() => hole[0] === parsedHoles[0])} hole={hole} />
+                  return <WateringHoleCard key={Math.random()} hole={hole} />
                 })
               }
             </>
@@ -28,7 +28,7 @@ export default function Home( { holes } ) {
       
       <div className='fixed z-40 right-1 bottom-20'>
         <div className='text-yellow-400'>
-          <AddButton type={0} />
+          <AddButton type={1} alertsDispatch={alertsDispatch} />
         </div>
       </div>
     </>

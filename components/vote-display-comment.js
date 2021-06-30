@@ -20,9 +20,9 @@ const VoteDisplayComment = ({ isVisible, setIsVisible, data, postID, alerts, ale
 
     const [galsToTransfer, setGalsToTransfer] = useState(100);
 
-    useEffect(() => {
+    useEffect(async () => {
         if(window.ethereum) {
-            window.ethereum.enable();
+            await window.ethereum.send('eth_requestAccounts');
             const signer = (new ethers.providers.Web3Provider(window.ethereum)).getSigner();
             setWateringHole(new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , signer));
             setWateringHoleBond(new ethers.Contract( WATERING_HOLES_BOND_ADDRESS , WATERING_HOLES_BOND_ABI , signer));
@@ -39,9 +39,10 @@ const VoteDisplayComment = ({ isVisible, setIsVisible, data, postID, alerts, ale
                         setIsVisible(!isVisible);
                         
                         try {
-                            await window.ethereum.enable();
-                            await GallonsERC20.increaseAllowance(WATERING_HOLES_ADDRESS, galsToTransfer * 100);
-                            await GallonsERC20.increaseAllowance(WATERING_HOLES_ADDRESS, galsToTransfer * 100);
+                            await window.ethereum.send('eth_requestAccounts');
+                            let accounts = await (new ethers.providers.Web3Provider(window.ethereum)).listAccounts();
+                            await GallonsERC20.increaseAllowance(accounts[0], galsToTransfer * 100);
+                            await GallonsERC20.increaseAllowance(WATERING_HOLES_BOND_ADDRESS, galsToTransfer * 100);
                             await WateringHole.payComment(postID, parseInt(data.post[0].hex, 16), galsToTransfer * 100);
                         } catch {}
 

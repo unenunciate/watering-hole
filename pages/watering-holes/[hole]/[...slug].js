@@ -27,9 +27,9 @@ export default function Post( { post, user, comments, alerts, alertsDispatch, wh
     const parsedWhData = JSON.parse(whData);
     const parsedComments = JSON.parse(comments);
 
-    const parsedGals = parseInt(parsedPost[6].hex, 16);
+    const parsedGals = parseInt(parsedPost[6].hex, 16)/100;
 
-    const userLink = `/user/${parsedUser[0]}`;
+    const userLink = `/profile/${parsedUser[1]}`;
     const holeLink = `/watering-holes/${parseInt(parsedWhData[0].hex, 16)}`;
 
     const [voteVisible, setVoteVisible] = useState(false);
@@ -70,7 +70,7 @@ export default function Post( { post, user, comments, alerts, alertsDispatch, wh
                                 </svg>
                             </button>
                             <div className='font-holocene'>
-                                {parsedGals/100}<span> </span>Gals
+                                {parsedGals}<span> </span>Gals
                             </div>
                         </div>
                         <VoteDisplayPost isVisible={voteVisible} setIsVisible={setVoteVisible} data={{post: parsedPost, user: parsedUser}} wID={parseInt(parsedWhData[0].hex, 16)} alerts={alerts} alertsDispatch={alertsDispatch} />

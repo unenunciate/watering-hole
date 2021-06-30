@@ -92,13 +92,12 @@ contract Watering_Holes_Bond is Ownable {
         }
 
         if(!found) {
-            _activeUsers.push(User(user_));
-//            requestPayment(user_, 1000);
+            _activeUsers.push(User(user_)); 
         }
     }
 
-    function getAmountOwed(address user_) public view {
-        _owedGallonsInReservoir[user_];
+    function getAmountOwed(address user_) public view returns(uint256 result){
+        result = _owedGallonsInReservoir[user_];
     }
 
     function disperse(uint16 _percentageToDisperse) internal {
@@ -124,6 +123,7 @@ contract Watering_Holes_Bond is Ownable {
                 
                 uint amountToPay = _owedGallonsInReservoir[_activeUsers[i]._user];
                 
+                _reservoir.increaseAllowance(address(this), amountToPay);
                 _reservoir.transferFrom(payable(address(this)), address(_activeUsers[i]._user), uint(amountToPay));
                 
                 _owedGallonsInReservoir[_activeUsers[i]._user] = 0;
@@ -234,7 +234,7 @@ contract Watering_Holes_Bond is Ownable {
                             count = i;
                             break;
                         }
-
+                        _reservoir.increaseAllowance(address(this), debtPayment_);    
                         _reservoir.transferFrom((payable(address(this))), creditorsPaidInGallons_[i]._creditor, debtPayment_);
                     }
 
@@ -279,6 +279,7 @@ contract Watering_Holes_Bond is Ownable {
 
         if(_activeUsers.length > 0) {
             for(uint i = 0; i < _activeUsers.length - 1; i++) {
+                _reservoir.increaseAllowance(address(this), amountToDisperse_);
                 _reservoir.transferFrom(payable(address(this)), address(_activeUsers[i]._user), uint(amountToDisperse_));
             }
                 
@@ -301,12 +302,12 @@ contract Watering_Holes_Bond is Ownable {
     }
     
     function taxedTransfer(address payable sender_, address payable recipient_, uint amount_) public returns(bool result) {
-        uint tax = amount_ / uint(2);
+        uint256 tax = amount_ / uint256(2);
         tax == 0 ? tax = 1 : tax = tax;
-        uint amountAfterTax = amount_ - tax;
+        uint256 amountAfterTax = amount_ - tax;
 
         _owedGallonsInReservoir[recipient_] += amountAfterTax;
-
+        
         result = _reservoir.transferFrom(sender_, payable(address(this)), amount_);
         
         require(result, 'Failed transfer.');

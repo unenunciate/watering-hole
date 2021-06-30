@@ -17,10 +17,14 @@ export default function WateringHole( {  alertsDispatch, pageContent, whData } )
                     <h1 className='flex'>{wateringHoleData[3]} : {wateringHoleData[1]}</h1>
                 </div>
 
-                <div className='mt-20'>
+                <div className='mt-32'>
                     {
                         content.map((item) => {
-                            return <Card wID={parseInt(wateringHoleData[0].hex, 16)} pID={item[1]} data={item} />
+                            return (
+                                <div className='mb-4'>
+                                    <Card key={Math.random()} wID={parseInt(wateringHoleData[0].hex, 16)} pID={item[1]} data={item} />
+                                </div>
+                            )
                         })
                     }
                 </div>

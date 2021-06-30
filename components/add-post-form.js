@@ -21,11 +21,11 @@ const AddForm = ({ setVisible, wID, pID, type, alertsDispatch }) => {
     const [post, setPost] = useState('');
 
     const [localGroup, setLocalGroup] = useState('');
-    const [majorGroup, setMajorGroup] = useState('');
+    const [majorGroup, setMajorGroup] = useState('Science');
 
-    useEffect(() => {
+    useEffect(async () => {
         if(window.ethereum) {
-            window.ethereum.enable();
+            await window.ethereum.send('eth_requestAccounts');
             setWateringHole(new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , (new ethers.providers.Web3Provider(window.ethereum)).getSigner()));
         }
     }, [])
@@ -48,7 +48,7 @@ const AddForm = ({ setVisible, wID, pID, type, alertsDispatch }) => {
                     </select>
                     <button type='reset' onClick={async () => {
                         setVisible(false);
-                        window.ethereum.enable();
+                        await window.ethereum.send('eth_requestAccounts');
                         await WateringHole.addWateringHole(localGroup, '', majorGroup, photoURL);
 
                         setPhotoURL('');
@@ -69,7 +69,7 @@ const AddForm = ({ setVisible, wID, pID, type, alertsDispatch }) => {
                         
                         <button type='reset' onClick={async () => {
                             setVisible(false);
-                            window.ethereum.enable();
+                            await window.ethereum.send('eth_requestAccounts');
                             const date = new Date();
                             const dateString = date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear();
 
@@ -91,7 +91,7 @@ const AddForm = ({ setVisible, wID, pID, type, alertsDispatch }) => {
                         
                         <button type='reset' onClick={async () => {
                             setVisible(false);
-                            window.ethereum.enable();
+                            await window.ethereum.send('eth_requestAccounts');
                             const date = new Date();
                             const dateString = date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear();
 

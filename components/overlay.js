@@ -15,11 +15,11 @@ const Overlay = ({ overlayVisible, setOverlayVisible }) => {
 
     const [name, setName] = useState('');
     const [photoURL, setPhotoURL] = useState('');
-    const [majorGroup, setMajorGroup] = useState('');
+    const [majorGroup, setMajorGroup] = useState('Science');
 
-    useEffect(() => {
+    useEffect(async () => {
         if(window.ethereum) {
-            window.ethereum.enable();
+            await window.ethereum.send('eth_requestAccounts');
             setWateringHole(new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , (new ethers.providers.Web3Provider(window.ethereum)).getSigner()));
         }
     }, []);

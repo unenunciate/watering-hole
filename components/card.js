@@ -16,7 +16,6 @@ const Card = ({ wID, data }) => {
     const [postGals, setPostGals] = useState(0);
 
     useEffect(async () => {
-        await window.ethereum.enable();
         const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , (new ethers.providers.Web3Provider(window.ethereum)));
 
         setUser(await WateringHoles.getUser(data[1]));
@@ -54,7 +53,7 @@ const Card = ({ wID, data }) => {
                     </div>
                     
                     <div className='ml-2 my-2'>
-                        <p className='-mt-2 text-blue-50'>{postGals/100} gals</p>
+                        <p className='-mt-2 text-blue-50'>{postGals} gals</p>
                     </div>
                 </div>
             </div>

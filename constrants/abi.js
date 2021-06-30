@@ -11,6 +11,88 @@ export const WATERING_HOLES_ABI =[
 		"type": "constructor"
 	},
 	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_by",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_pID",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_cID",
+				"type": "uint256"
+			}
+		],
+		"name": "NewComment",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_by",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_wID",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_pID",
+				"type": "uint256"
+			}
+		],
+		"name": "NewPost",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_by",
+				"type": "address"
+			}
+		],
+		"name": "NewUser",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_by",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_wID",
+				"type": "uint256"
+			}
+		],
+		"name": "NewWateringHole",
+		"type": "event"
+	},
+	{
 		"inputs": [],
 		"name": "_Watering_Holes_Bond",
 		"outputs": [
@@ -224,6 +306,11 @@ export const WATERING_HOLES_ABI =[
 				"internalType": "string",
 				"name": "_pictureURL",
 				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "_founder",
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -568,6 +655,11 @@ export const WATERING_HOLES_ABI =[
 						"internalType": "string",
 						"name": "_pictureURL",
 						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "_founder",
+						"type": "address"
 					}
 				],
 				"internalType": "struct Watering_Holes.WateringHole",
@@ -620,6 +712,19 @@ export const WATERING_HOLES_ABI =[
 			}
 		],
 		"name": "payPost",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "topic_",
+				"type": "string"
+			}
+		],
+		"name": "updateFavoriteTopic",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -1262,34 +1367,6 @@ export const GALLONS_ERC20_ABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "address payable",
-				"name": "creditor_",
-				"type": "address"
-			},
-			{
-				"internalType": "bool",
-				"name": "payableInGallons_",
-				"type": "bool"
-			},
-			{
-				"internalType": "uint256",
-				"name": "creditExtended_",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint8",
-				"name": "paybackPeriods_",
-				"type": "uint8"
-			}
-		],
-		"name": "addCreditor",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "uint16",
 				"name": "amountToDisperse_",
 				"type": "uint16"
@@ -1337,7 +1414,13 @@ export const GALLONS_ERC20_ABI = [
 			}
 		],
 		"name": "getAmountOwed",
-		"outputs": [],
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
 		"stateMutability": "view",
 		"type": "function"
 	},
@@ -1357,6 +1440,24 @@ export const GALLONS_ERC20_ABI = [
 	{
 		"inputs": [],
 		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address payable",
+				"name": "recipent",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "requestPayment",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

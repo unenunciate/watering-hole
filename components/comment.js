@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 const Comment = ({ data, postID, alerts, alertsDispatch }) => {
     const parsedGals = parseInt(data.post[6].hex, 16)/100;
-    const userLink = `/user/${data.user[1]}`;
+    const userLink = `/profile/${data.user[1]}`;
 
     const [voteVisible, setVoteVisible] = useState(false);
 
@@ -37,7 +37,7 @@ const Comment = ({ data, postID, alerts, alertsDispatch }) => {
                         </svg>
                     </button>
                     <div className='font-holocene'>
-                        {parsedGals/100}<span> </span>Gals
+                        {parsedGals}<span> </span>Gals
                     </div>
                 </div>
                 <VoteDisplayComment isVisible={voteVisible} setIsVisible={setVoteVisible} data={data} postID={postID} alerts={alerts} alertsDispatch={alertsDispatch} />
