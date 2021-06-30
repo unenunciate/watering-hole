@@ -61,7 +61,7 @@ const Profile = ( { user, posts } ) => {
                 {
                     parsedPosts.map(({wID, data}) => {
                         return (
-                            <div className='mb-4'>
+                            <div key={Math.random()} className='mb-4'>
                                 <Card key={Math.random()} wID={wID} data={data}/>
                             </div>
                         );
@@ -74,22 +74,6 @@ const Profile = ( { user, posts } ) => {
 
 export default Profile;
 
-const eventFilter = async (contractAddress, erc20abi, _provider) => {
-    const iface = new ethers.utils.Interface(erc20abi);
-    const logs = await _provider.getLogs({
-        address: contractAddress
-    });
-    const decodedEvents = logs.map(log => {
-        iface.decodeEventLog("NewPost", log.data)
-        console.log(log);
-    });
-
-    console.log(decodedEvents);
-  //  const wIDs = decodedEvents.map(event => event["values"]["_wID"]);
-  //  const pIDs = decodedEvents.map(event => event["values"]["_pID"]);
- //   return [wIDs, pIDs];
-}
-
 export async function getServerSideProps ( { query } ) {
     const serverProvider = new ethers.providers.JsonRpcProvider('HTTP://127.0.0.1:9545');
     const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , serverProvider);
@@ -97,22 +81,15 @@ export async function getServerSideProps ( { query } ) {
 
     const user = await WateringHoles.getUser(address);
 
-    const temp0 = WateringHoles.filters.NewPost(user[1]);
-    const temp = await WateringHoles.queryFilter(temp0);
-
+    const filter = WateringHoles.filters.NewPost(address);
+    const queriedData = await WateringHoles.queryFilter(filter);
     const iface = new ethers.utils.Interface(WATERING_HOLES_ABI);
+
     let posts = [];
-    for(let i = 0; i < temp.length; i++) {
-        const decodedEvents = iface.decodeEventLog("NewPost", temp[i].data);
-        console.log(posts[posts.length]);
-        posts[posts.length] = { wID: parseInt(decodedEvents._wID._hex, 16), data: await WateringHoles.getPost(parseInt(decodedEvents._wID._hex, 16), parseInt(decodedEvents._pID._hex, 16))};
-        console.log(posts[posts.length]);
+    for(let i = 0; i < queriedData.length; i++) {
+        const decodedEvent = iface.decodeEventLog("NewPost", queriedData[i].data);
+        posts[posts.length] = { wID: parseInt(decodedEvent._wID._hex, 16), data: await WateringHoles.getPost(parseInt(decodedEvent._wID._hex, 16), parseInt(decodedEvent._pID._hex, 16))};
     }
-
-    console.log("decode",posts);
-
-    const decoder = new ethers.utils.AbiCoder();
-    console.log(eventFilter(WATERING_HOLES_ADDRESS, WATERING_HOLES_ABI, serverProvider));
 
     return {
       props: { user: JSON.stringify(user), posts: JSON.stringify(posts) },
