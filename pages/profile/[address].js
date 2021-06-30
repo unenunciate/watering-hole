@@ -31,12 +31,17 @@ const Profile = ( { user, posts } ) => {
     }, [])
 
     const [recentActivity, setRecentActivity] = useState(0);
+    const [balance, setBalance] = useState(0);
 
     useEffect(async() => {
         if(window.ethereum) {
             if(WateringHoleBond) {
                 let temp = (await WateringHoleBond.getAmountOwed( parsedUser[1] ));
                 setRecentActivity(parseInt(temp._hex, 16)/100);
+            }
+            if(GallonsERC20) {
+                let temp = (await GallonsERC20.balanceOf( parsedUser[1] ));
+                setBalance(parseInt(temp._hex, 16)/100);
             }
         }
     }, [WateringHole, WateringHoleBond, GallonsERC20])
@@ -48,8 +53,9 @@ const Profile = ( { user, posts } ) => {
                 <div className='font-holocene text-yellow-400 px-12 truncate' >{parsedUser[1]}</div>
                 <div className='font-holocene text-yellow-400 px-12 truncate' >Name: {parsedUser[2]}</div>
                 <div className='font-holocene text-yellow-400 px-12' >Recent Activity: {recentActivity} Gals</div>
-                <div className='font-holocene text-yellow-400 px-12' >Balance: {parseInt(parsedUser[4].hex, 16)/100} Gals</div>
-                <div className='font-holocene text-yellow-400 px-12' >Contributions Received: {parseInt(parsedUser[4].hex, 16)/100} Gals</div>
+                <div className='font-holocene text-yellow-400 px-12' >Balance: {balance} Gals</div>
+                <div className='font-holocene text-yellow-400 px-12' >Lifetime Contributions Received: {parseInt(parsedUser[4].hex, 16)/100} Gals</div>
+                <div className='font-holocene text-yellow-400 px-12' >Lifetime Contributions Given: {parseInt(parsedUser[7].hex, 16)/100} Gals</div>
                 <div className='font-holocene text-yellow-400 px-12' >Favorite Topic: {parsedUser[5]} </div>
                 <div className='font-holocene text-yellow-400 px-12' >Total Number of Posts: {parseInt(parsedUser[6].hex, 16)} </div>
                 <div className='font-holocene text-yellow-400 px-12 truncate -mb-16' >

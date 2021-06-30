@@ -56,6 +56,7 @@ contract Watering_Holes {
         uint256 _numberOfGallonsSupported;
         string _topic;
         uint256 _numberOfPosts;
+        uint256 _numberOfGallonsGiven;
     }
 
     /*
@@ -169,6 +170,7 @@ contract Watering_Holes {
             profilePhotoURL_,
             0,
             topic_,
+            0,
             0
             );
 
@@ -218,7 +220,8 @@ contract Watering_Holes {
     
     function payPost(uint256 wateringHoleID_, uint256 postID_, uint256 amount_) public {
         require(_users[address(msg.sender)]._user == address(msg.sender), 'User not found, can not update.');
-        
+        _users[address(msg.sender)]._numberOfGallonsGiven += amount_;
+
         _posts[wateringHoleID_][postID_]._numberOfGallonsSupported += amount_;
         Post memory post_ = _posts[wateringHoleID_][postID_];
         
@@ -228,6 +231,7 @@ contract Watering_Holes {
     
     function payComment( uint256 postID_, uint256 commentID_, uint256 amount_) public {
         require(_users[address(msg.sender)]._user == address(msg.sender), 'User not found, can not update.');
+        _users[address(msg.sender)]._numberOfGallonsGiven += amount_;
 
         _comments[postID_][commentID_]._numberOfGallonsSupported += amount_;
         Post memory comment_ = _comments[postID_][commentID_];
