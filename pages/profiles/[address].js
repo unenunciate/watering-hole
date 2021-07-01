@@ -50,17 +50,17 @@ const Profile = ( { user, posts } ) => {
 
     return (
         <div className='flex-col flex items-center py-24'>
-            <div className='flex flex-col bg-blue-600 border-4 border-yellow-400 items-center mt-16' >
-                <img src={parsedUser[3]} height={128} width={128} className='rounded-full border-4 border-yellow-400 -mt-16' />
-                <div className='font-holocene text-yellow-400 px-12 truncate' >{parsedUser[1]}</div>
-                <div className='font-holocene text-yellow-400 px-12 truncate' >Name: {parsedUser[2]}</div>
+            <div className='flex flex-col bg-blue-600 border-4 border-yellow-400 items-center mt-16 shadow-2xl' >
+                <img src={parsedUser[3]} height={128} width={128} className='rounded-full border-4 border-yellow-400 -mt-16 shadow-2xl' />
+                <div className='font-holocene text-yellow-400 px-12 truncate pt-2' >{parsedUser[2].toUpperCase()}</div>
+                <div className='font-holocene text-yellow-400 truncate text-sm px-4' >{parsedUser[1]}</div>
                 <div className='font-holocene text-yellow-400 px-12' >Recent Activity: {recentActivity} Gals</div>
                 <div className='font-holocene text-yellow-400 px-12' >Balance: {balance} Gals</div>
-                <div className='font-holocene text-yellow-400 px-12' >Lifetime Contributions Received: {parseInt(parsedUser[4].hex, 16)/100} Gals</div>
+                <div className='font-holocene text-yellow-400 px-12' >Lifetime Contributions: {parseInt(parsedUser[4].hex, 16)/100} Gals</div>
                 <div className='font-holocene text-yellow-400 px-12' >Favorite Topic: {parsedUser[5]} </div>
-                <div className='font-holocene text-yellow-400 px-12' >Total Number of Posts: {parseInt(parsedUser[6].hex, 16)} </div>
+                <div className='font-holocene text-yellow-400 px-12 pb-2' >Total Number of Posts: {parseInt(parsedUser[6].hex, 16)} </div>
                 <div className='font-holocene text-yellow-400 px-12 truncate -mb-16' >
-                    <img src={parsedUser[3]} height={128} width={128} className='rounded-full border-4 border-yellow-400' />
+                    <img src={parsedUser[3]} height={128} width={128} className='rounded-full border-4 border-yellow-400 shadow-2xl' />
                 </div>
             </div>
             <div className='mt-20 items-center'>
