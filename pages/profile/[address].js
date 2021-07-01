@@ -46,6 +46,8 @@ const Profile = ( { user, posts } ) => {
         }
     }, [WateringHole, WateringHoleBond, GallonsERC20])
 
+    console.log(parsedUser);
+
     return (
         <div className='flex-col flex items-center py-24'>
             <div className='flex flex-col bg-blue-600 border-4 border-yellow-400 items-center mt-16' >
@@ -55,7 +57,6 @@ const Profile = ( { user, posts } ) => {
                 <div className='font-holocene text-yellow-400 px-12' >Recent Activity: {recentActivity} Gals</div>
                 <div className='font-holocene text-yellow-400 px-12' >Balance: {balance} Gals</div>
                 <div className='font-holocene text-yellow-400 px-12' >Lifetime Contributions Received: {parseInt(parsedUser[4].hex, 16)/100} Gals</div>
-                <div className='font-holocene text-yellow-400 px-12' >Lifetime Contributions Given: {parseInt(parsedUser[7].hex, 16)/100} Gals</div>
                 <div className='font-holocene text-yellow-400 px-12' >Favorite Topic: {parsedUser[5]} </div>
                 <div className='font-holocene text-yellow-400 px-12' >Total Number of Posts: {parseInt(parsedUser[6].hex, 16)} </div>
                 <div className='font-holocene text-yellow-400 px-12 truncate -mb-16' >
@@ -81,7 +82,7 @@ const Profile = ( { user, posts } ) => {
 export default Profile;
 
 export async function getServerSideProps ( { query } ) {
-    const serverProvider = new ethers.providers.JsonRpcProvider('HTTP://127.0.0.1:9545');
+    const serverProvider = new ethers.providers.JsonRpcProvider('https://ropsten.infura.io/v3/bb89bda1e77844a0bc414756b92a6496');
     const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , serverProvider);
     const { address } = query;
 

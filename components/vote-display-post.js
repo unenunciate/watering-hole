@@ -2,7 +2,6 @@ import { WATERING_HOLES_ABI } from '../constrants/abi';
 import { WATERING_HOLES_ADDRESS } from '../constrants/index';
 
 import { WATERING_HOLES_BOND_ADDRESS } from '../constrants/index';
-import { WATERING_HOLES_BOND_ABI } from '../constrants/abi';
 
 import { GALLONS_ERC20_ADDRESS } from '../constrants/index';
 import { GALLONS_ERC20_ABI } from '../constrants/abi';
@@ -15,7 +14,6 @@ import { useState, useEffect } from 'react';
 const VoteDisplayPost = ({ isVisible, setIsVisible, data, wID, alerts, alertsDispatch }) => {
     
     const [WateringHole, setWateringHole] = useState({});
-    const [WateringHoleBond, setWateringHoleBond] = useState({});
     const [GallonsERC20, setGallonsERC20] = useState({});
 
     const [galsToTransfer, setGalsToTransfer] = useState(100);
@@ -24,7 +22,6 @@ const VoteDisplayPost = ({ isVisible, setIsVisible, data, wID, alerts, alertsDis
         if(window.ethereum) {
             await window.ethereum.send('eth_requestAccounts');
             setWateringHole(new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , (new ethers.providers.Web3Provider(window.ethereum)).getSigner()));
-            setWateringHoleBond(new ethers.Contract( WATERING_HOLES_BOND_ADDRESS , WATERING_HOLES_BOND_ABI , (new ethers.providers.Web3Provider(window.ethereum)).getSigner()));
             setGallonsERC20(new ethers.Contract( GALLONS_ERC20_ADDRESS , GALLONS_ERC20_ABI , (new ethers.providers.Web3Provider(window.ethereum)).getSigner()));
         }
     }, [])

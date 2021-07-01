@@ -12,22 +12,15 @@ import { ethers } from 'ethers';
 import { useState, useEffect } from 'react';
 
 const Support = () => {
-
-    const [WateringHole, setWateringHole] = useState(false);
     const [WateringHoleBond, setWateringHoleBond] = useState(false);
-    const [GallonsERC20, setGallonsERC20] = useState(false);
-
+    
     const [account, setAccount] = useState(false);
-    const [ethersSigner, setEthersSigner] = useState(false);
 
     useEffect(() => {
         if(window.ethereum) {
             const signer = (new ethers.providers.Web3Provider(window.ethereum)).getSigner();
-            setEthersSigner(signer);
             setAccount(signer.getAddress());
-            setWateringHole(new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , signer));
             setWateringHoleBond(new ethers.Contract( WATERING_HOLES_BOND_ADDRESS , WATERING_HOLES_BOND_ABI , signer));
-            setGallonsERC20(new ethers.Contract( GALLONS_ERC20_ADDRESS , GALLONS_ERC20_ABI , signer));
         }
     }, [])
 
@@ -41,7 +34,6 @@ const Support = () => {
         const overrides = {
             value: ethers.utils.parseEther(amount)
         };
-
         await WateringHoleBond.expandBondCreditPool(account, payableInGallons, paybackPeriods, overrides);
 
         setCustomPaybackPeriodsVisible(false);

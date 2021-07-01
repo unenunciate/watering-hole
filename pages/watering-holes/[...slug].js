@@ -17,7 +17,7 @@ export default function WateringHole( {  alertsDispatch, pageContent, whData } )
                     <h1 className='flex'>{wateringHoleData[3]} : {wateringHoleData[1]}</h1>
                 </div>
 
-                <div className='mt-32'>
+                <div className='mt-20'>
                     {
                         content.map((item) => {
                             return (
@@ -41,7 +41,7 @@ export default function WateringHole( {  alertsDispatch, pageContent, whData } )
 
 
 export async function getServerSideProps ( { query } ) {
-    const serverProvider = new ethers.providers.JsonRpcProvider('HTTP://127.0.0.1:9545');
+    const serverProvider = new ethers.providers.JsonRpcProvider('https://ropsten.infura.io/v3/bb89bda1e77844a0bc414756b92a6496');
     const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , serverProvider);
     const { slug } = query;
 

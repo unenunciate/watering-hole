@@ -2,6 +2,7 @@
   "name": "dilettante-frontend",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,6 +11,7 @@
   "dependencies": {
     "@maticnetwork/maticjs": "^2.0.40",
     "@tailwindcss/jit": "^0.1.18",
+    "@truffle/hdwallet-provider": "^1.4.1",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "autoprefixer": "^10.2.5",

@@ -98,7 +98,7 @@ export default function Post( { post, user, comments, alerts, alertsDispatch, wh
 
 
 export async function getServerSideProps ( { query } ) {
-    const serverProvider = new ethers.providers.JsonRpcProvider('HTTP://127.0.0.1:9545');
+    const serverProvider = new ethers.providers.JsonRpcProvider('https://ropsten.infura.io/v3/bb89bda1e77844a0bc414756b92a6496');
     const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , serverProvider);
     const { hole, slug } = query;
 

@@ -1,18 +1,3 @@
-import { useEffect, useState } from 'react';
-
-import Skeleton from 'react-loading-skeleton';
-
-import { WATERING_HOLES_ADDRESS } from '../constrants/index';
-import { WATERING_HOLES_ABI } from '../constrants/abi';
-
-import { WATERING_HOLES_BOND_ADDRESS } from '../constrants/index';
-import { WATERING_HOLES_BOND_ABI } from '../constrants/abi';
-
-import { GALLONS_ERC20_ADDRESS } from '../constrants/index';
-import { GALLONS_ERC20_ABI } from '../constrants/abi';
-
-import Ethers from '../lib/ethers';
-import { ethers } from 'ethers';
 import Link from 'next/link';
 
 const WateringHoleCard = ({ hole }) => {
