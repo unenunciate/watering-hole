@@ -39,7 +39,8 @@ export default function Topics( { topics } ) {
 
 
 export async function getServerSideProps ( ) {
-  const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , Ethers );
+  const serverProvider = new ethers.providers.JsonRpcProvider('https://ropsten.infura.io/v3/bb89bda1e77844a0bc414756b92a6496');
+  const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , serverProvider );
 
   const numberOfWateringHoles = await WateringHoles.getNumberOfWateringHoles()
 
