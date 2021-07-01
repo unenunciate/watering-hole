@@ -1,14 +1,4 @@
-import { useEffect, useState } from 'react';
-
-import Skeleton from 'react-loading-skeleton';
-
-import {EtherProvider, useEtherProvider, useAccount} from 'use-ether-provider';
-
-import { GALLONS_ERC20_ADDRESS } from '../../../constrants/index';
-import { GALLONS_ERC20_ABI } from '../../../constrants/abi';
-
-import { WATERING_HOLES_BOND_ADDRESS } from '../../../constrants/index';
-import { WATERING_HOLES_BOND_ABI } from '../../../constrants/abi';
+import { useState } from 'react';
 
 import { WATERING_HOLES_ADDRESS } from '../../../constrants/index';
 import { WATERING_HOLES_ABI } from '../../../constrants/abi';

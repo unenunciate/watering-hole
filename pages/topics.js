@@ -1,9 +1,6 @@
-import { useContext, useEffect } from 'react';
-
 import { WATERING_HOLES_ADDRESS } from '../constrants/index';
 import { WATERING_HOLES_ABI } from '../constrants/abi';
 
-import Ethers from '../lib/ethers';
 import { ethers } from 'ethers';
 
 import WateringHoleCard from '../components/watering-hole-card';
@@ -79,8 +76,6 @@ export async function getServerSideProps ( ) {
         break;
     }
   }
-
-  
 
   return {
     props: { topics: JSON.stringify(topics) },
