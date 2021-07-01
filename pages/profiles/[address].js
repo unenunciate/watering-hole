@@ -56,9 +56,9 @@ const Profile = ( { user, posts } ) => {
                 <div className='font-holocene text-yellow-400 truncate text-sm w-4/6 -mx-4' >{parsedUser[1]}</div>
                 <div className='font-holocene text-yellow-400 px-6' >Recent Activity: {recentActivity} Gals</div>
                 <div className='font-holocene text-yellow-400 px-6' >Balance: {balance} Gals</div>
-                <div className='font-holocene text-yellow-400 px-6' >Lifetime Contributions: {parseInt(parsedUser[4].hex, 16)/100} Gals</div>
-                <div className='font-holocene text-yellow-400 px-6' >Favorite Topic: {parsedUser[5]} </div>
-                <div className='font-holocene text-yellow-400 px-6 pb-2' >Total Number of Posts: {parseInt(parsedUser[6].hex, 16)} </div>
+                <div className='font-holocene text-yellow-400 ' >Lifetime Contributions: {parseInt(parsedUser[4].hex, 16)/100} Gals</div>
+                <div className='font-holocene text-yellow-400 ' >Favorite Topic: {parsedUser[5]} </div>
+                <div className='font-holocene text-yellow-400 pb-2' >Total Number of Posts: {parseInt(parsedUser[6].hex, 16)} </div>
                 <div className='font-holocene text-yellow-400 px-6 truncate -mb-16' >
                     <img src={parsedUser[3]} height={128} width={128} className='rounded-full border-4 border-yellow-400 shadow-2xl' />
                 </div>
