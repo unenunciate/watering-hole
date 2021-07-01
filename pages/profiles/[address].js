@@ -53,7 +53,7 @@ const Profile = ( { user, posts } ) => {
             <div className='flex flex-col bg-blue-600 border-4 border-yellow-400 items-center mt-16 shadow-2xl' >
                 <img src={parsedUser[3]} height={128} width={128} className='rounded-full border-4 border-yellow-400 -mt-16 shadow-2xl' />
                 <div className='font-holocene text-yellow-400 px-12 truncate pt-2' >{parsedUser[2].toUpperCase()}</div>
-                <div className='font-holocene text-yellow-400 truncate text-sm px-4' >{parsedUser[1]}</div>
+                <div className='font-holocene text-yellow-400 truncate text-sm w-5/6 px-4' >{parsedUser[1]}</div>
                 <div className='font-holocene text-yellow-400 px-12' >Recent Activity: {recentActivity} Gals</div>
                 <div className='font-holocene text-yellow-400 px-12' >Balance: {balance} Gals</div>
                 <div className='font-holocene text-yellow-400 px-12' >Lifetime Contributions: {parseInt(parsedUser[4].hex, 16)/100} Gals</div>
