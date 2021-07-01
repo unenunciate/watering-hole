@@ -1,4 +1,3 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
@@ -12,6 +11,8 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Test Wallet Address
+## Watering Hole
 
-0xe0a95BdE2672bBD12263C31BF818384Ca4DFEa87
+This is a proof of concept of an immutable online forum built on ethereum and stores all of its data on the blockchain.
+
+
