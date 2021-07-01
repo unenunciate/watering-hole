@@ -12,10 +12,9 @@ import Overlay from '../components/overlay';
 
 import AlertsDisplay from '../components/alerts-display'
 
-import awsmobile from '../src/aws-exports';
 
 Amplify.configure({
-  ...awsmobile, ssr: true
+  ssr: true
 });
 
 const App = ({ Component, pageProps }) => {
