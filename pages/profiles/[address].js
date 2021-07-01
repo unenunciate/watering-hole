@@ -64,7 +64,7 @@ const Profile = ( { user, posts } ) => {
                 </div>
             </div>
             <div className='mt-20 items-center'>
-                <div className='text-center text-2xl mb-8 text-blue-600 bg-blue-400 border-4 border-blue-600 rounded'>Posts</div>
+                <div className='text-center text-2xl mb-8 text-blue-600 bg-blue-400 border-4 border-blue-600 rounded shadow-2xl'>Posts</div>
                 {
                     parsedPosts.map(({wID, data}) => {
                         return (
