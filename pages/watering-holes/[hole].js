@@ -43,14 +43,14 @@ export default function WateringHole( {  alertsDispatch, pageContent, whData } )
 export async function getServerSideProps ( { query } ) {
     const serverProvider = new ethers.providers.JsonRpcProvider('https://ropsten.infura.io/v3/bb89bda1e77844a0bc414756b92a6496');
     const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , serverProvider);
-    const { slug } = query;
+    const { hole } = query;
 
-    const wateringHole = await WateringHoles.getWateringHole(slug[0]);
+    const wateringHole = await WateringHoles.getWateringHole(hole[0]);
 
     let posts = [];
 
     for(let i = 1; i <= parseInt(wateringHole[5], 16); i++ ) {
-        posts.push(await WateringHoles.getPost( slug[0], i ));
+        posts.push(await WateringHoles.getPost( hole[0], i ));
     }
 
     return {

@@ -2,6 +2,8 @@ import '../styles/globals.css';
 
 import Head from 'next/head';
 
+import Amplify from 'aws-amplify';
+
 import { useState, useReducer } from 'react';
 
 import Header from '../components/header';
@@ -10,6 +12,11 @@ import Overlay from '../components/overlay';
 
 import AlertsDisplay from '../components/alerts-display'
 
+import config from '../src/aws-exports';
+
+Amplify.configure({
+  ...config, ssr: true
+});
 
 const App = ({ Component, pageProps }) => {
 

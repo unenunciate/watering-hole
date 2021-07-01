@@ -19,7 +19,7 @@ export default function Post( { post, user, comments, alerts, alertsDispatch, wh
 
     const parsedGals = parseInt(parsedPost[6].hex, 16)/100;
 
-    const userLink = `/profile/${parsedUser[1]}`;
+    const userLink = `/profiles/${parsedUser[1]}`;
     const holeLink = `/watering-holes/${parseInt(parsedWhData[0].hex, 16)}`;
 
     const [voteVisible, setVoteVisible] = useState(false);
@@ -90,15 +90,13 @@ export default function Post( { post, user, comments, alerts, alertsDispatch, wh
 export async function getServerSideProps ( { query } ) {
     const serverProvider = new ethers.providers.JsonRpcProvider('https://ropsten.infura.io/v3/bb89bda1e77844a0bc414756b92a6496');
     const WateringHoles = new ethers.Contract( WATERING_HOLES_ADDRESS , WATERING_HOLES_ABI , serverProvider);
-    const { hole, slug } = query;
+    const { hole, post } = query;
 
-    console.log(slug)
-    
-    const post = await WateringHoles.getPost(parseInt(hole, 10), parseInt(slug[0], 10)); 
-    const user = await WateringHoles.getUser(post._poster);
+    const postData = await WateringHoles.getPost(parseInt(hole, 10), parseInt(post[0], 10)); 
+    const user = await WateringHoles.getUser(postData._poster);
     const whData = await WateringHoles.getWateringHole(parseInt(hole, 10));
 
-    const numberOfCommentsInPost = parseInt(post._numberOfCommentsInPost); 
+    const numberOfCommentsInPost = parseInt(postData._numberOfCommentsInPost); 
     let comments = [];
 
     for(let i = 1; i <= numberOfCommentsInPost; i++ ) {
@@ -108,6 +106,6 @@ export async function getServerSideProps ( { query } ) {
     }
 
     return {
-      props: { wID: parseInt(hole, 10), post: JSON.stringify(post), user: JSON.stringify(user), comments: JSON.stringify(comments), whData: JSON.stringify(whData) },
+      props: { wID: parseInt(hole, 10), post: JSON.stringify(postData), user: JSON.stringify(user), comments: JSON.stringify(comments), whData: JSON.stringify(whData) },
     } 
 }

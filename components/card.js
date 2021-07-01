@@ -21,7 +21,7 @@ const Card = ({ wID, data }) => {
         setUser(await WateringHoles.getUser(data[1]));
         setPostGals(parseInt(data[6].hex, 16)/100);
 
-        setUserLink(`/profile/${data[1]}`);
+        setUserLink(`/profiles/${data[1]}`);
         setPostLink(`/watering-holes/${wID}/${parseInt(data[0].hex)}`);
     }, [user, setUser, setPostGals, setUserLink, setPostLink]);
 

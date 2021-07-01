@@ -102,3 +102,9 @@ export async function getServerSideProps ( { query } ) {
       props: { user: JSON.stringify(user), posts: JSON.stringify(posts) },
     } 
 }
+
+/*
+/profiles/<address>	/profiles/[address].html
+/watering-holes/<wid>	/watering-holes/[slug].html
+/watering-holes/<wid>/<pid>	/watering-holes/[hole]/[slug].html
+*/

@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 const Comment = ({ data, postID, alerts, alertsDispatch }) => {
     const parsedGals = parseInt(data.post[6].hex, 16)/100;
-    const userLink = `/profile/${data.user[1]}`;
+    const userLink = `/profiles/${data.user[1]}`;
 
     const [voteVisible, setVoteVisible] = useState(false);
 
